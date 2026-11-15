@@ -224,7 +224,7 @@ export class Maximize extends Component implements Meta {
   }
 
   /**
-   * Triggered via `.maximize()`, a click on the icon, or the Enter key or the space bar
+   * Triggered via `.maximize()`, a click on the icon, or the Enter key or the space bar being lifted
    * @event
    * @category Events
    */
@@ -335,6 +335,10 @@ export class Maximize extends Component implements Meta {
       Gesture.KEYDOWN,
       this._handleIconKeydown
     );
+    this.elements.icon?.addEventListener(
+      Gesture.KEYUP,
+      this._handleIconKeyupMaximize
+    );
   };
 
   /**
@@ -362,6 +366,10 @@ export class Maximize extends Component implements Meta {
     this.elements.icon?.removeEventListener(
       Gesture.KEYDOWN,
       this._handleIconKeydown
+    );
+    this.elements.icon?.removeEventListener(
+      Gesture.KEYUP,
+      this._handleIconKeyupMaximize
     );
   };
 
@@ -404,4 +412,15 @@ export class Maximize extends Component implements Meta {
     event.preventDefault();
     this._press();
   };
+
+  /**
+   * Handles a key being lifted on the icon: Enter or Space requests maximizing
+   * when the maximize button is pressed
+   * @category Gesture
+   * @hidden
+   */
+  private _handleIconKeyupMaximize = (event: KeyboardEvent) =>
+    (event.key === Key.ENTER || event.key === Key.SPACE) &&
+    this.status === Status.PRESSED &&
+    this.maximize();
 }
