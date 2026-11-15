@@ -133,6 +133,13 @@ export class Maximize extends Component implements Meta {
   public get status(): Status {
     return this._status;
   }
+  private set status(status: Status) {
+    // Guard
+    if (this._status === status) return;
+
+    // Mutate
+    this._status = status;
+  }
 
   /**
    * Get and set the appearance of the maximize button
@@ -182,6 +189,15 @@ export class Maximize extends Component implements Meta {
    * @category Operations
    */
   public maximize = () => {};
+
+  /**
+   * Press the maximize button: called when the pointer goes down on the icon
+   * @category Operations
+   * @hidden
+   */
+  private _press = () => {
+    this.status = Status.PRESSED;
+  };
 
   /**
    * List operations to perform for selected attributes being observed in the DOM.
