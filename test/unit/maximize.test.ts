@@ -6,7 +6,8 @@ import {
   CSS,
   Attributes,
   State,
-  Visibility
+  Visibility,
+  Status
 } from "@scalable.software/maximize";
 
 // Configuration
@@ -367,6 +368,43 @@ state(State.VISIBILITY, () => {
                 expect(error.message).toBe("Invalid visibility value: invalid");
               }
             );
+          });
+        });
+      });
+    });
+  });
+});
+
+state(State.STATUS, () => {
+  given("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("a HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("`maximize.status` getter exists", () => {
+          expect(maximize.status).toBeDefined();
+        });
+
+        when("`maximize.status` getter exists", () => {
+          then("`maximize.status` is `Status.RELEASED`", () => {
+            expect(maximize.status).toBe(Status.RELEASED);
           });
         });
       });
