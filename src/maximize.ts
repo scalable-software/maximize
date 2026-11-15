@@ -322,6 +322,10 @@ export class Maximize extends Component implements Meta {
       Gesture.POINTERUP,
       this._handleIconPointerup
     );
+    this.elements.icon?.addEventListener(
+      Gesture.POINTERLEAVE,
+      this._handleIconPointerleave
+    );
   };
 
   /**
@@ -338,6 +342,10 @@ export class Maximize extends Component implements Meta {
       Gesture.POINTERUP,
       this._handleIconPointerup
     );
+    this.elements.icon?.removeEventListener(
+      Gesture.POINTERLEAVE,
+      this._handleIconPointerleave
+    );
   };
 
   /**
@@ -353,4 +361,11 @@ export class Maximize extends Component implements Meta {
    * @hidden
    */
   private _handleIconPointerup = () => this._release();
+
+  /**
+   * Handles the pointer leaving the icon: releases the maximize button
+   * @category Gesture
+   * @hidden
+   */
+  private _handleIconPointerleave = () => this._release();
 }
