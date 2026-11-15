@@ -101,6 +101,13 @@ export class Maximize extends Component implements Meta {
   private _onshow: EventListener | null = null;
 
   /**
+   * onmaximize triggered each time maximizing is requested
+   * @category Events
+   * @hidden
+   */
+  private _onmaximize: EventListener | null = null;
+
+  /**
    * Cache element references to improve performance
    * @category State
    * @hidden
@@ -212,6 +219,19 @@ export class Maximize extends Component implements Meta {
    */
   public set onshow(handler: EventListener | null) {
     this._onshow = this._subscribe(Event.ON_SHOW, this._onshow, handler);
+  }
+
+  /**
+   * Triggered via `.maximize()`, a click on the icon, or the Enter key or the space bar
+   * @event
+   * @category Events
+   */
+  public set onmaximize(handler: EventListener | null) {
+    this._onmaximize = this._subscribe(
+      Event.ON_MAXIMIZE,
+      this._onmaximize,
+      handler
+    );
   }
 
   /**
