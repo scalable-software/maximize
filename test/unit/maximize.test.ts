@@ -1022,6 +1022,28 @@ events(Event.ON_SHOW, () => {
                 maximize.onshow = onshow;
               });
 
+              and("`maximize.onshow` is set to a new listener", () => {
+                let onshow2: jasmine.Spy;
+                beforeEach(() => {
+                  onshow2 = jasmine.createSpy("onshow2");
+                  maximize.onshow = onshow2;
+                });
+
+                when("`maximize.visibility` is set to `Visibility.VISIBLE`", () => {
+                  beforeEach(() => {
+                    maximize.visibility = Visibility.VISIBLE;
+                  });
+
+                  then("old `maximize.onshow` is not called", () => {
+                    expect(onshow).not.toHaveBeenCalled();
+                  });
+
+                  then("new `maximize.onshow` is called", () => {
+                    expect(onshow2).toHaveBeenCalled();
+                  });
+                });
+              });
+
               when("`maximize.visibility` is set to `Visibility.VISIBLE` twice", () => {
                 beforeEach(() => {
                   maximize.visibility = Visibility.VISIBLE;
