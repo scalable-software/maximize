@@ -1197,6 +1197,36 @@ events(Event.ON_MAXIMIZE, () => {
               maximize.onmaximize = onmaximize;
             });
 
+            when("`maximize.onmaximize` is set to `invalid`", () => {
+              let error: Error;
+              beforeEach(() => {
+                try {
+                  // @ts-expect-error
+                  maximize.onmaximize = "invalid";
+                } catch (err) {
+                  error = err as Error;
+                }
+              });
+
+              then("an error is thrown", () => {
+                expect(error).toBeDefined();
+              });
+
+              then("error message contains 'Invalid onmaximize value: invalid'", () => {
+                expect(error.message).toBe("Invalid onmaximize value: invalid");
+              });
+
+              when("`maximize.maximize` is invoked", () => {
+                beforeEach(() => {
+                  maximize.maximize();
+                });
+
+                then("`maximize.onmaximize` is still called", () => {
+                  expect(onmaximize).toHaveBeenCalled();
+                });
+              });
+            });
+
             when("`maximize.maximize` is invoked", () => {
               beforeEach(() => {
                 maximize.maximize();
