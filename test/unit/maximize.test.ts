@@ -487,6 +487,14 @@ state(State.STATUS, () => {
           });
         });
 
+        then("assigning `maximize.status` outside the maximize does not compile", () => {
+          const assign = () => {
+            // @ts-expect-error: the setter of `status` is private
+            maximize.status = Status.PRESSED;
+          };
+          expect(assign).toEqual(jasmine.any(Function));
+        });
+
         when("invoking `maximize._release`", () => {
           beforeEach(() => {
             maximize["_release"]();
