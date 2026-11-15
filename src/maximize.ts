@@ -15,7 +15,8 @@ import {
   Status,
   Appearance,
   Event,
-  Gesture
+  Gesture,
+  Key
 } from "./maximize.meta.js";
 
 import { type Meta } from "./maximize.meta.js";
@@ -330,6 +331,10 @@ export class Maximize extends Component implements Meta {
       Gesture.CLICK,
       this._handleIconClick
     );
+    this.elements.icon?.addEventListener(
+      Gesture.KEYDOWN,
+      this._handleIconKeydown
+    );
   };
 
   /**
@@ -353,6 +358,10 @@ export class Maximize extends Component implements Meta {
     this.elements.icon?.removeEventListener(
       Gesture.CLICK,
       this._handleIconClick
+    );
+    this.elements.icon?.removeEventListener(
+      Gesture.KEYDOWN,
+      this._handleIconKeydown
     );
   };
 
@@ -383,4 +392,12 @@ export class Maximize extends Component implements Meta {
    * @hidden
    */
   private _handleIconClick = () => this.maximize();
+
+  /**
+   * Handles a key pressed on the icon: Enter requests maximizing
+   * @category Gesture
+   * @hidden
+   */
+  private _handleIconKeydown = (event: KeyboardEvent) =>
+    event.key === Key.ENTER && this.maximize();
 }
