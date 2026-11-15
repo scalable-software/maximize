@@ -1513,8 +1513,12 @@ gesture(Gesture.KEYDOWN, () => {
               );
             });
 
-            then("`onmaximize` is called", () => {
-              expect(onmaximize).toHaveBeenCalled();
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
             });
           });
 
@@ -1526,8 +1530,12 @@ gesture(Gesture.KEYDOWN, () => {
               );
             });
 
-            then("`onmaximize` is called", () => {
-              expect(onmaximize).toHaveBeenCalled();
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
             });
           });
 
