@@ -270,7 +270,8 @@ export class Maximize extends Component implements Meta {
   };
 
   /**
-   * Release the maximize button: called when the pointer is lifted from the icon or leaves it
+   * Release the maximize button: called when the pointer is lifted from the icon or leaves it,
+   * and when Enter or Space is lifted on it
    * @category Operations
    * @hidden
    */
@@ -339,6 +340,10 @@ export class Maximize extends Component implements Meta {
       Gesture.KEYUP,
       this._handleIconKeyupMaximize
     );
+    this.elements.icon?.addEventListener(
+      Gesture.KEYUP,
+      this._handleIconKeyupRelease
+    );
   };
 
   /**
@@ -370,6 +375,10 @@ export class Maximize extends Component implements Meta {
     this.elements.icon?.removeEventListener(
       Gesture.KEYUP,
       this._handleIconKeyupMaximize
+    );
+    this.elements.icon?.removeEventListener(
+      Gesture.KEYUP,
+      this._handleIconKeyupRelease
     );
   };
 
@@ -423,4 +432,13 @@ export class Maximize extends Component implements Meta {
     (event.key === Key.ENTER || event.key === Key.SPACE) &&
     this.status === Status.PRESSED &&
     this.maximize();
+
+  /**
+   * Handles a key being lifted on the icon: Enter or Space releases the maximize button.
+   * Registered after `_handleIconKeyupMaximize`, so the request is made before the release
+   * @category Gesture
+   * @hidden
+   */
+  private _handleIconKeyupRelease = (event: KeyboardEvent) =>
+    (event.key === Key.ENTER || event.key === Key.SPACE) && this._release();
 }
