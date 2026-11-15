@@ -307,6 +307,16 @@ state(State.VISIBILITY, () => {
             });
           });
 
+          when("`visibility` attribute is set to `Visibility.VISIBLE`", () => {
+            beforeEach(() => {
+              maximize.setAttribute(Attributes.VISIBILITY, Visibility.VISIBLE);
+            });
+
+            then("`visibility` attribute does not exist", () => {
+              expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
+            });
+          });
+
           when("`visibility` attribute is set to `invalid`", () => {
             let error: Error;
             beforeEach(async () => {
