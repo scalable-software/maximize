@@ -460,6 +460,29 @@ state(State.STATUS, () => {
               expect(reported).not.toHaveBeenCalled();
             });
           });
+
+          when("`status` attribute is set to `invalid`", () => {
+            let reported: jasmine.Spy;
+            beforeEach(async () => {
+              await jasmine.spyOnGlobalErrorsAsync(async (spy) => {
+                maximize.setAttribute(Attributes.STATUS, "invalid");
+                reported = spy;
+              });
+            });
+
+            then("`status` attribute is `Status.RELEASED`", () => {
+              const value = maximize.getAttribute(Attributes.STATUS);
+              expect(value).toBe(Status.RELEASED);
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toBe(Status.RELEASED);
+            });
+
+            then("no error is reported", () => {
+              expect(reported).not.toHaveBeenCalled();
+            });
+          });
         });
       });
     });
