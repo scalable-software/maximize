@@ -1030,6 +1030,18 @@ events(Event.ON_SHOW, () => {
                 then("`maximize.onshow` is called", () => {
                   expect(onshow).toHaveBeenCalled();
                 });
+
+                then(
+                  "`maximize.onshow` is called with `{ detail: { visibility: Visibility.VISIBLE } }`",
+                  () => {
+                    const message = {
+                      detail: { visibility: Visibility.VISIBLE }
+                    };
+                    expect(onshow).toHaveBeenCalledWith(
+                      jasmine.objectContaining(message)
+                    );
+                  }
+                );
               });
             });
           });
