@@ -1506,11 +1506,18 @@ gesture(Gesture.KEYDOWN, () => {
           });
 
           when("user presses `Key.ENTER` on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
-              icon.dispatchEvent(
-                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
-              );
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: Key.ENTER,
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is prevented", () => {
+              expect(keydown.defaultPrevented).toBeTrue();
             });
 
             then("`maximize.status` is `Status.PRESSED`", () => {
@@ -1523,11 +1530,18 @@ gesture(Gesture.KEYDOWN, () => {
           });
 
           when("user presses `Key.SPACE` on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
-              icon.dispatchEvent(
-                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.SPACE })
-              );
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: Key.SPACE,
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is prevented", () => {
+              expect(keydown.defaultPrevented).toBeTrue();
             });
 
             then("`maximize.status` is `Status.PRESSED`", () => {
