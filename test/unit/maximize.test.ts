@@ -1493,6 +1493,19 @@ gesture(Gesture.KEYDOWN, () => {
               expect(onmaximize).toHaveBeenCalled();
             });
           });
+
+          when("user presses `Key.SPACE` on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.SPACE })
+              );
+            });
+
+            then("`onmaximize` is called", () => {
+              expect(onmaximize).toHaveBeenCalled();
+            });
+          });
         });
       });
     });
