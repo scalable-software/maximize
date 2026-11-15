@@ -495,6 +495,11 @@ state(State.STATUS, () => {
           then("`maximize.status` is `Status.PRESSED`", () => {
             expect(maximize.status).toBe(Status.PRESSED);
           });
+
+          then("`status` attribute is `Status.PRESSED`", () => {
+            const value = maximize.getAttribute(Attributes.STATUS);
+            expect(value).toBe(Status.PRESSED);
+          });
         });
       });
 
