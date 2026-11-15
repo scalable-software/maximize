@@ -581,6 +581,16 @@ state(State.APPEARANCE, () => {
             });
           });
 
+          when("`appearance` attribute is set to `Appearance.FLAT`", () => {
+            beforeEach(() => {
+              maximize.setAttribute(Attributes.APPEARANCE, Appearance.FLAT);
+            });
+
+            then("`maximize.appearance` is `Appearance.FLAT`", () => {
+              expect(maximize.appearance).toBe(Appearance.FLAT);
+            });
+          });
+
           when("`maximize.appearance` is set to `invalid`", () => {
             let error: Error;
             beforeEach(() => {
