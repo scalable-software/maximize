@@ -899,6 +899,18 @@ events(Event.ON_HIDE, () => {
               then("`maximize.onhide` is called", () => {
                 expect(onhide).toHaveBeenCalled();
               });
+
+              then(
+                "`maximize.onhide` is called with `{ detail: { visibility: Visibility.HIDDEN } }`",
+                () => {
+                  const message = {
+                    detail: { visibility: Visibility.HIDDEN }
+                  };
+                  expect(onhide).toHaveBeenCalledWith(
+                    jasmine.objectContaining(message)
+                  );
+                }
+              );
             });
           });
         });
