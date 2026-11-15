@@ -872,6 +872,18 @@ operation(Operation.MAXIMIZE, () => {
               then("`maximize.maximize` returns nothing", () => {
                 expect(result).toBeUndefined();
               });
+
+              then("`maximize.visibility` is `Visibility.VISIBLE`", () => {
+                expect(maximize.visibility).toBe(Visibility.VISIBLE);
+              });
+
+              then("`maximize.status` is `Status.RELEASED`", () => {
+                expect(maximize.status).toBe(Status.RELEASED);
+              });
+
+              then("`maximize.appearance` is `Appearance.FLOATING`", () => {
+                expect(maximize.appearance).toBe(Appearance.FLOATING);
+              });
             });
 
             when("invoking `maximize.maximize` twice", () => {
