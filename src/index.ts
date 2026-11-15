@@ -8,7 +8,8 @@ export {
   Appearance,
   Operation,
   Event,
-  Gesture
+  Gesture,
+  Key
 } from "./maximize.meta.js";
 
 export { Validate } from "./maximize.validation.js";
