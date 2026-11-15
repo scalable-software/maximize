@@ -882,6 +882,26 @@ events(Event.ON_HIDE, () => {
         then("`maximize.onhide` setter exists", () => {
           expect(hasSetter(maximize, Event.ON_HIDE)).toBeTrue();
         });
+
+        and("`maximize.onhide` setter exists", () => {
+          and("`maximize.onhide` is set to a listener", () => {
+            let onhide: jasmine.Spy;
+            beforeEach(() => {
+              onhide = jasmine.createSpy("onhide");
+              maximize.onhide = onhide;
+            });
+
+            when("`maximize.visibility` is set to `Visibility.HIDDEN`", () => {
+              beforeEach(() => {
+                maximize.visibility = Visibility.HIDDEN;
+              });
+
+              then("`maximize.onhide` is called", () => {
+                expect(onhide).toHaveBeenCalled();
+              });
+            });
+          });
+        });
       });
     });
   });
