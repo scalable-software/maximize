@@ -1710,6 +1710,30 @@ gesture(Gesture.KEYUP, () => {
             });
           });
 
+          and("user presses `Key.ENTER` on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+              );
+            });
+
+            when("user lifts another key on `div` with class `icon`", () => {
+              beforeEach(() => {
+                const icon = maximize.root.querySelector(".icon") as HTMLElement;
+                icon.dispatchEvent(new KeyboardEvent(Gesture.KEYUP, { key: "a" }));
+              });
+
+              then("`maximize.status` is `Status.PRESSED`", () => {
+                expect(maximize.status).toEqual(Status.PRESSED);
+              });
+
+              then("`onmaximize` is not called", () => {
+                expect(onmaximize).not.toHaveBeenCalled();
+              });
+            });
+          });
+
           and("user presses `Key.SPACE` on `div` with class `icon`", () => {
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
