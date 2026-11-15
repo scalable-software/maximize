@@ -1654,6 +1654,25 @@ gesture(Gesture.KEYUP, () => {
               then("`onmaximize` is called once", () => {
                 expect(onmaximize).toHaveBeenCalledTimes(1);
               });
+
+              then("`maximize.status` is `Status.RELEASED`", () => {
+                expect(maximize.status).toEqual(Status.RELEASED);
+              });
+
+              when("user lifts `Key.ENTER` on `div` with class `icon` again", () => {
+                beforeEach(() => {
+                  const icon = maximize.root.querySelector(
+                    ".icon"
+                  ) as HTMLElement;
+                  icon.dispatchEvent(
+                    new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+                  );
+                });
+
+                then("`onmaximize` is called once", () => {
+                  expect(onmaximize).toHaveBeenCalledTimes(1);
+                });
+              });
             });
           });
 
@@ -1675,6 +1694,25 @@ gesture(Gesture.KEYUP, () => {
 
               then("`onmaximize` is called once", () => {
                 expect(onmaximize).toHaveBeenCalledTimes(1);
+              });
+
+              then("`maximize.status` is `Status.RELEASED`", () => {
+                expect(maximize.status).toEqual(Status.RELEASED);
+              });
+
+              when("user lifts `Key.SPACE` on `div` with class `icon` again", () => {
+                beforeEach(() => {
+                  const icon = maximize.root.querySelector(
+                    ".icon"
+                  ) as HTMLElement;
+                  icon.dispatchEvent(
+                    new KeyboardEvent(Gesture.KEYUP, { key: Key.SPACE })
+                  );
+                });
+
+                then("`onmaximize` is called once", () => {
+                  expect(onmaximize).toHaveBeenCalledTimes(1);
+                });
               });
             });
           });
