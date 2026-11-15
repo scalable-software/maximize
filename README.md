@@ -1,98 +1,235 @@
 ![License: CC BY-NC-SA 4.0](https://flat.badgen.net/static/license/CC-BY-NC-SA-4.0/green)
 
-# Component Template
+# Maximize
 
-This is a template for creating a new component. It includes a basic structure for the component, as well as a set of scripts for building, testing, and documenting the component.
+A theme-aware web component that lets users ask for a window to be maximized, and can be shown or hidden, while emitting an event for each request.
 
-## Getting Started
+---
 
-To create a new component, you can use this template as a starting point. To do so, click the "Use this template" button at the top of the repository page. This will create a new repository with the same structure as this one.
+## 1. Introduction
 
-Once you have created a new repository, you can clone it to your local machine and start working on your component.
+The **Maximize** component is a press button for the corner of a window, panel or dialog. It asks for the window to be maximized and does nothing else: each request is reported through the `onmaximize` event, and the host application decides what to do with it. The component holds no window state.
 
-```bash
-git clone
+It is a custom element with a Shadow DOM, built on `@scalable.software/component`. It can be driven through properties and operations, through attributes, or by the end user with a pointer or the keyboard.
+
+### 1.1 Installation & Setup
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/scalable-software/maximize.git
+   cd maximize
+   ```
+
+2. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Run Tests (Optional)**
+
+   ```bash
+   npm test
+   ```
+
+4. **Start Local Server**
+
+   ```bash
+   npm run serve
+   ```
+
+   - This builds the component and opens the demo page, which shows a `<maximize-button>` with a control for everything a host application can use.
+
+---
+
+## 2. Quick Start Usage Walkthrough
+
+The demo page shows the component in a band across the top, and three groups below it: **States**, **Operations** and **Events**.
+
+1. **Click** the `<maximize-button>`.
+   - While the pointer is held down, the button looks pressed and **States** shows `status` as `pressed`.
+   - When the pointer is lifted on the button, **Events** logs `onmaximize`.
+   - Press, move the pointer off the button, and let go: the button is released and nothing is logged.
+
+2. **Press** the **maximize** button under **Operations**.
+   - `onmaximize` is logged again: the operation makes the same request as a click.
+
+3. **Focus** the `<maximize-button>` with the Tab key and press **Enter** or the **space bar**.
+   - Each key press logs `onmaximize`.
+
+4. **Press** **hide** and then **show** under **Operations**, or choose a `visibility` under **States**.
+   - The button disappears and comes back, and `onhide` and `onshow` are logged with their `detail`.
+
+5. **Choose** `flat` for `appearance` under **States**.
+   - The button loses its border, its shadow and its rounded corners, as it would inside a taskbar.
+
+The same can be done from the console:
+
+```js
+const maximize = document.querySelector("maximize-button");
+
+maximize.onmaximize = () => console.log("Maximizing was requested");
+
+maximize.maximize(); // "Maximizing was requested"
+maximize.hide();
+maximize.visibility; // "hidden"
+maximize.show();
+maximize.status; // "released"
 ```
 
-## Install Dependencies
+---
 
-1. Before creating a new component, first install the dependencies:
+## 3. Architectural Overview
 
-```bash
-npm install
+### 3.1 Composition
+
+- **Template** (`maximize.template.html`): a `.icon` container, focusable and announced as a button, holding the SVG icon of a single square.
+- **Style** (`maximize.style.css`): the look of the button, its pressed, hover and flat variants, and the light and dark themes.
+- **Class** (`maximize.ts`): extends the base component; holds the states, the operations, the event subscriptions and the gesture handlers.
+- **Metadata** (`maximize.meta.ts`): the names and the values of everything the component has.
+- **Validation** (`maximize.validation.ts`): the checks on values that come from outside.
+
+### 3.2 Class Lifecycle
+
+Lifecycle methods are implemented in the base class and extended by the **Maximize** component:
+
+- **`connectedCallback()`**
+  1. Creates a Shadow DOM.
+  2. Clones the HTML template into the Shadow Root.
+  3. Inserts a `<link>` for scoped CSS.
+  4. Puts the `status` attribute in place.
+  5. Sets up the listeners on the icon: `pointerdown`, `pointerup`, `pointerleave`, `click` and `keydown`.
+
+- **`disconnectedCallback()`**
+  - Removes the listeners.
+
+---
+
+## 4. Core Concepts: State, Operations, Events and Gestures
+
+### 4.1 State
+
+- **`visibility`** (`visible` | `hidden`)
+  - Whether the button is displayed.
+  - **Optional attribute**: absent when `visible` (the default); present as `[visibility="hidden"]` when hidden.
+
+- **`status`** (`released` | `pressed`), **readonly**
+  - Whether the button is being pressed. It is `pressed` from the moment the pointer goes down on the icon until it is lifted or leaves the icon, and `released` at all other times.
+  - **Compulsory attribute**: always present, so that the stylesheet can show the pressed look through `:host([status="pressed"])`.
+  - Only the component changes it. It has no public setter, and an attribute that is changed or removed from outside is put back.
+
+- **`appearance`** (`floating` | `flat`)
+  - Whether the button stands alone, with its own border, shadow and rounded corners, or lies flat inside another surface such as a taskbar.
+  - **Optional attribute**: absent when `floating` (the default); present as `[appearance="flat"]` when flat.
+  - It changes how the button looks, not what it does: it has no operation and sends no event.
+
+A writable state can be set through its property or its attribute; both go through the same setter:
+
+```js
+maximize.visibility = "hidden";
+maximize.setAttribute("appearance", "flat");
 ```
 
-2. Then run the `test` to ensure everything is in working order:
+- An invalid value assigned to a property throws, for example `Invalid visibility value: invalid`.
+- An invalid value written to an attribute is reported by the browser, and the attribute is put back to show the state.
+- `null`, or a removed attribute, means the default.
+
+### 4.2 Operations
+
+1. `hide()` → sets `visibility` to `hidden`
+2. `show()` → sets `visibility` to `visible`
+3. `maximize()` → requests maximizing. It changes no state: every call dispatches `onmaximize`.
+
+### 4.3 Events
+
+- **`onhide`**: dispatched when `visibility` changes from `visible` to `hidden`, with `detail: { visibility: "hidden" }`.
+- **`onshow`**: dispatched when `visibility` changes from `hidden` to `visible`, with `detail: { visibility: "visible" }`.
+- **`onmaximize`**: dispatched each time maximizing is requested, by a gesture or by the `maximize` operation. It has no `detail`.
+
+Assign a handler to the property, or listen on the element:
+
+```js
+maximize.onmaximize = () => host.maximize();
+
+maximize.addEventListener("onmaximize", () => {
+  // ...
+});
+```
+
+- Assigning a new handler replaces the previous one; `null` removes it.
+- A value that is not a function throws, for example `Invalid onmaximize value: invalid`.
+- The events do not bubble: subscribe on the element itself.
+- `onevent`, from the base component, receives every event the component sends.
+
+### 4.4 Gestures
+
+| Gesture | On | Does |
+|---|---|---|
+| `pointerdown` | the icon | the button becomes `pressed` |
+| `pointerup` | the icon | the button becomes `released` |
+| `pointerleave` | the icon | the button becomes `released`, and no request is made |
+| `click` | the icon | calls `maximize()` |
+| `keydown` | the icon | calls `maximize()` when the key is Enter or Space |
+| hover | the icon | changes the background, the border, the shadow and the colour of the icon |
+
+The button behaves like the matching control in the corner of a desktop window: it looks pressed while it is held, the request is made when the pointer is let go on it, and moving away before letting go makes no request.
+
+---
+
+## 5. Development Workflow
+
+### 5.1 Testing
+
+Unit tests run with Karma and Jasmine in headless Chrome. The run first checks the specification against the schema of each policy, and then compiles.
 
 ```bash
 npm test
 ```
 
-> note: a coverage and test report will be generated in the `coverage` directory and `report` directory, respectively.
+A test report and a coverage report are written to `report` and `coverage`.
 
-3. Finally, run the `document` script to generate the component API documentation:
+### 5.2 Documentation (Typedoc)
 
 ```bash
 npm run document
 ```
 
-> note: The API documentation will be generated in the `docs` directory. You can review this by opening the `index.html` file in the `docs` directory in a web browser.
+Generates the API docs in `docs` from the TypeScript annotations.
 
-## Creating a New Component
-
-To create a new component, you should first update the package metadata:
-
-## Update Package Metadata
-
-Update the package name across all relevant files in this project:
-
-1. Specifications: update name and add package metadata in the `component.specifications.json` file in the `specifications` directory.
-
-2. Package: `package.json` in the `root` directory.
-
-3. Typescript Config: both `tsconfig.json` files are in the `root` directory.
-
-4. ES Module: `importmap.js` files in the `importmap` directory.
-
-5. Component: update the file names in `src` folder and class name.
-
-6. Unit Testing: The `wallaby.js` and `karma.conf.js` files are in the `root` directory, the file names and the package name used in unit tests: `test/unit`
-
-7. Demo: The `index.js` file in the `demo` directory.
-
-8. Confirm that the component name has been updated in all relevant files by running the `test` script:
+### 5.3 Build
 
 ```bash
-npm test
+npm run build
 ```
 
-## Creating a New Component
+Compiles to `dist/`, the only folder that is published.
 
-To create a new component:
+### 5.4 Import Maps
 
-1. Review the directory and file structure of the fake `component` implementation.
-2. Study this software architecture implementation policies (available from repository owner).
-3. Define the component specifications using the `component.specifications.json` template file provided.
-4. Stickly follow a TDD development approach in feature branches.
-5. After complete implementation of a feature, `test`, `build`, and generate the `documentation` (see below)
-6. Update the demo scaffold in the `demo` directory to reflect the new component's API and functionality.
-7. Lastly do a pull request to the `main` branch and merge it if everything checks out.
+The component is an ES module, imported by its package name. An import map tells the browser where that name, and the base component it depends on, are found:
 
-### Testing the Component
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@scalable.software/maximize": "/node_modules/@scalable.software/maximize/dist/index.js",
+      "@scalable.software/component": "/node_modules/@scalable.software/component/dist/index.js"
+    }
+  }
+</script>
+<script type="module">
+  import { Maximize } from "@scalable.software/maximize";
 
-To test the component, you can use the `test` script. This script will run the component's test suite and generate both a test and coverage report.
+  await Maximize.Template.load("maximize.template.html");
 
-```bash
-npm test
+  customElements.define(Maximize.Tag, Maximize);
+</script>
+
+<maximize-button></maximize-button>
 ```
 
-### Document the Component API
-
-To document the component API, you can use the `docs` script. This script will generate a set of documentation files for the component.
-
-```bash
-npm run document
-```
+---
 
 ## License
 
