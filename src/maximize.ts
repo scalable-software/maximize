@@ -7,7 +7,9 @@ import { Component, Template } from "@scalable.software/component";
 import { type Configuration } from "@scalable.software/component";
 
 // Maximize Metadata
-import { Tag, CSS, Attributes } from "./maximize.meta.js";
+import { Tag, CSS, Attributes, Visibility } from "./maximize.meta.js";
+
+import { type Meta } from "./maximize.meta.js";
 
 /**
  * Optional Configuration: required for maximize buttons with custom layout and style
@@ -26,7 +28,7 @@ export const configuration: Configuration = {
 /**
  * @category Maximize
  */
-export class Maximize extends Component {
+export class Maximize extends Component implements Meta {
   /**
    * The tag name of the maximize button
    * @category Configuration
@@ -50,6 +52,14 @@ export class Maximize extends Component {
   public static Template = new Template(import.meta.url);
 
   /**
+   * Internal Visibility state of the component
+   * @category State
+   * @default Visibility.VISIBLE
+   * @hidden
+   */
+  private _visibility: Visibility = Visibility.VISIBLE;
+
+  /**
    * Cache element references to improve performance
    * @category State
    * @hidden
@@ -61,6 +71,14 @@ export class Maximize extends Component {
    */
   constructor() {
     super(configuration);
+  }
+
+  /**
+   * Get the visibility of the maximize button
+   * @category State
+   */
+  public get visibility(): Visibility {
+    return this._visibility;
   }
 
   /**
