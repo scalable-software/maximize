@@ -500,6 +500,21 @@ state(State.STATUS, () => {
             const value = maximize.getAttribute(Attributes.STATUS);
             expect(value).toBe(Status.PRESSED);
           });
+
+          when("invoking `maximize._release`", () => {
+            beforeEach(() => {
+              maximize["_release"]();
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toBe(Status.RELEASED);
+            });
+
+            then("`status` attribute is `Status.RELEASED`", () => {
+              const value = maximize.getAttribute(Attributes.STATUS);
+              expect(value).toBe(Status.RELEASED);
+            });
+          });
         });
       });
 
