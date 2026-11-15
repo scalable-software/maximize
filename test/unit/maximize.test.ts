@@ -603,6 +603,21 @@ state(State.APPEARANCE, () => {
             then("`appearance` attribute does not exist", () => {
               expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
             });
+
+            then("`maximize.appearance` is `Appearance.FLOATING`", () => {
+              expect(maximize.appearance).toBe(Appearance.FLOATING);
+            });
+
+            then("an error is reported", () => {
+              expect(error).toBeDefined();
+            });
+
+            then(
+              "error message contains 'Invalid appearance value: invalid'",
+              () => {
+                expect(error.message).toBe("Invalid appearance value: invalid");
+              }
+            );
           });
 
           when("`maximize.appearance` is set to `invalid`", () => {
