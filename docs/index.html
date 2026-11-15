@@ -47,7 +47,7 @@
 </ol>
 <hr>
 <h2 id="2-quick-start-usage-walkthrough" class="tsd-anchor-link">2. Quick Start Usage Walkthrough<a href="#2-quick-start-usage-walkthrough" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The demo page shows the component in a band across the top, and three groups below it: <strong>Operations</strong>, <strong>States</strong> and <strong>Events</strong>.</p>
+<p>The demo page shows the component in a band across the top, and three groups below it: <strong>States</strong>, <strong>Operations</strong> and <strong>Events</strong>.</p>
 <ol>
 <li>
 <p><strong>Click</strong> the <code>&lt;maximize-button&gt;</code>.</p>
@@ -66,7 +66,9 @@
 <li>
 <p><strong>Focus</strong> the <code>&lt;maximize-button&gt;</code> with the Tab key and press <strong>Enter</strong> or the <strong>space bar</strong>.</p>
 <ul>
-<li>Each key press logs <code>onmaximize</code>.</li>
+<li>While the key is held down, the button looks pressed and <strong>States</strong> shows <code>status</code> as <code>pressed</code>; holding it logs nothing, and the page does not scroll.</li>
+<li>When the key is lifted, the button is released and <strong>Events</strong> logs <code>onmaximize</code>, once for each press.</li>
+<li>Press a key, move the focus away with the Tab key, and let go: the button is released and nothing is logged.</li>
 </ul>
 </li>
 <li>
@@ -90,7 +92,7 @@
 <h2 id="3-architectural-overview" class="tsd-anchor-link">3. Architectural Overview<a href="#3-architectural-overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="31-composition" class="tsd-anchor-link">3.1 Composition<a href="#31-composition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul>
-<li><strong>Template</strong> (<code>maximize.template.html</code>): a <code>.icon</code> container, focusable and announced as a button, holding the SVG icon of a single square.</li>
+<li><strong>Template</strong> (<code>maximize.template.html</code>): a <code>.icon</code> container, focusable and announced as the button &quot;Maximize&quot;, holding the SVG icon of a single square.</li>
 <li><strong>Style</strong> (<code>maximize.style.css</code>): the look of the button, its pressed, hover and flat variants, and the light and dark themes.</li>
 <li><strong>Class</strong> (<code>maximize.ts</code>): extends the base component; holds the states, the operations, the event subscriptions and the gesture handlers.</li>
 <li><strong>Metadata</strong> (<code>maximize.meta.ts</code>): the names and the values of everything the component has.</li>
@@ -106,7 +108,7 @@
 <li>Clones the HTML template into the Shadow Root.</li>
 <li>Inserts a <code>&lt;link&gt;</code> for scoped CSS.</li>
 <li>Puts the <code>status</code> attribute in place.</li>
-<li>Sets up the listeners on the icon: <code>pointerdown</code>, <code>pointerup</code>, <code>pointerleave</code>, <code>click</code> and <code>keydown</code>.</li>
+<li>Sets up the listeners on the icon: <code>pointerdown</code>, <code>pointerup</code>, <code>pointerleave</code>, <code>click</code>, <code>keydown</code>, <code>keyup</code> and <code>blur</code>.</li>
 </ol>
 </li>
 <li>
@@ -130,7 +132,7 @@
 <li>
 <p><strong><code>status</code></strong> (<code>released</code> | <code>pressed</code>), <strong>readonly</strong></p>
 <ul>
-<li>Whether the button is being pressed. It is <code>pressed</code> from the moment the pointer goes down on the icon until it is lifted or leaves the icon, and <code>released</code> at all other times.</li>
+<li>Whether the button is being pressed. It is <code>pressed</code> from the moment the pointer goes down on the icon until it is lifted or leaves the icon, and from the moment Enter or Space goes down on the focused icon until the key is lifted or the icon loses focus. It is <code>released</code> at all other times.</li>
 <li><strong>Compulsory attribute</strong>: always present, so that the stylesheet can show the pressed look through <code>:host([status=&quot;pressed&quot;])</code>.</li>
 <li>Only the component changes it. It has no public setter, and an attribute that is changed or removed from outside is put back.</li>
 </ul>
@@ -208,7 +210,17 @@
 <tr>
 <td><code>keydown</code></td>
 <td>the icon</td>
-<td>calls <code>maximize()</code> when the key is Enter or Space</td>
+<td>the button becomes <code>pressed</code> when the key is Enter or Space, and the page does not scroll</td>
+</tr>
+<tr>
+<td><code>keyup</code></td>
+<td>the icon</td>
+<td>when the key is Enter or Space: calls <code>maximize()</code> if the button is <code>pressed</code>, then the button becomes <code>released</code></td>
+</tr>
+<tr>
+<td><code>blur</code></td>
+<td>the icon</td>
+<td>the button becomes <code>released</code>, and no request is made</td>
 </tr>
 <tr>
 <td>hover</td>
@@ -217,7 +229,7 @@
 </tr>
 </tbody>
 </table>
-<p>The button behaves like the matching control in the corner of a desktop window: it looks pressed while it is held, the request is made when the pointer is let go on it, and moving away before letting go makes no request.</p>
+<p>The button behaves like the matching control in the corner of a desktop window: it looks pressed while it is held, the request is made when the pointer is let go on it, and moving away before letting go makes no request. It acts the same under the keyboard: the request is made when Enter or Space is lifted, once for each press, and moving the focus away before lifting the key makes no request. Assistive technology announces it by its name, &quot;Maximize&quot;, through the <code>aria-label</code> of the icon.</p>
 <hr>
 <h2 id="5-development-workflow" class="tsd-anchor-link">5. Development Workflow<a href="#5-development-workflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="51-testing" class="tsd-anchor-link">5.1 Testing<a href="#51-testing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
