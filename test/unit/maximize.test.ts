@@ -158,6 +158,47 @@ composition(Composition.CSS, () => {
   });
 });
 
+composition(Composition.ELEMENT, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("`maximize.elements.icon` is defined", () => {
+          expect(maximize["elements"].icon).toBeDefined();
+        });
+
+        when("`maximize.elements.icon` is defined", () => {
+          then(
+            "`maximize.elements.icon` is a cached reference to the `div` with class `icon`",
+            () => {
+              const icon = maximize.root.querySelector(".icon") as HTMLDivElement;
+              expect(maximize["elements"].icon).toBe(icon);
+            }
+          );
+        });
+      });
+    });
+  });
+});
+
 // State
 
 // Operation
