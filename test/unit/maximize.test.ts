@@ -564,6 +564,11 @@ state(State.APPEARANCE, () => {
             then("`maximize.appearance` is `Appearance.FLAT`", () => {
               expect(maximize.appearance).toBe(Appearance.FLAT);
             });
+
+            then("maximize `appearance` attribute is `Appearance.FLAT`", () => {
+              const value = maximize.getAttribute(Attributes.APPEARANCE);
+              expect(value).toBe(Appearance.FLAT);
+            });
           });
 
           when("`maximize.appearance` is set to `null`", () => {
