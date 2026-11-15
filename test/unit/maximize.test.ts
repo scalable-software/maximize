@@ -486,6 +486,16 @@ state(State.STATUS, () => {
             });
           });
         });
+
+        when("invoking `maximize._press`", () => {
+          beforeEach(() => {
+            maximize["_press"]();
+          });
+
+          then("`maximize.status` is `Status.PRESSED`", () => {
+            expect(maximize.status).toBe(Status.PRESSED);
+          });
+        });
       });
 
       and(
