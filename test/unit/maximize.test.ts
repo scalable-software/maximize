@@ -699,6 +699,23 @@ operation(Operation.HIDE, () => {
         then("`maximize.hide` method exists", () => {
           expect(maximize.hide).toBeDefined();
         });
+
+        and("`maximize.hide` method exists", () => {
+          when("invoking `maximize.hide`", () => {
+            let result: unknown;
+            beforeEach(() => {
+              result = maximize.hide();
+            });
+
+            then("`maximize.visibility` is `Visibility.HIDDEN`", () => {
+              expect(maximize.visibility).toBe(Visibility.HIDDEN);
+            });
+
+            then("`maximize.hide` returns nothing", () => {
+              expect(result).toBeUndefined();
+            });
+          });
+        });
       });
     });
   });
