@@ -135,11 +135,15 @@ export class Maximize extends Component implements Meta {
   }
 
   /**
-   * Get the appearance of the maximize button
+   * Get and set the appearance of the maximize button
    * @category State
    */
   public get appearance(): Appearance {
     return this._appearance;
+  }
+  public set appearance(appearance: Appearance) {
+    // Mutate
+    this._appearance = appearance;
   }
 
   /**
