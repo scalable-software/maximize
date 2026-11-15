@@ -1022,6 +1022,17 @@ events(Event.ON_SHOW, () => {
                 maximize.onshow = onshow;
               });
 
+              when("`maximize.visibility` is set to `Visibility.VISIBLE` twice", () => {
+                beforeEach(() => {
+                  maximize.visibility = Visibility.VISIBLE;
+                  maximize.visibility = Visibility.VISIBLE;
+                });
+
+                then("`maximize.onshow` is called once", () => {
+                  expect(onshow).toHaveBeenCalledTimes(1);
+                });
+              });
+
               when("`maximize.visibility` is set to `Visibility.VISIBLE`", () => {
                 beforeEach(() => {
                   maximize.visibility = Visibility.VISIBLE;
