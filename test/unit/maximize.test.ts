@@ -891,6 +891,36 @@ events(Event.ON_HIDE, () => {
               maximize.onhide = onhide;
             });
 
+            when("`maximize.onhide` is set to `invalid`", () => {
+              let error: Error;
+              beforeEach(() => {
+                try {
+                  // @ts-expect-error
+                  maximize.onhide = "invalid";
+                } catch (err) {
+                  error = err as Error;
+                }
+              });
+
+              then("an error is thrown", () => {
+                expect(error).toBeDefined();
+              });
+
+              then("error message contains 'Invalid onhide value: invalid'", () => {
+                expect(error.message).toBe("Invalid onhide value: invalid");
+              });
+
+              when("`maximize.visibility` is set to `Visibility.HIDDEN`", () => {
+                beforeEach(() => {
+                  maximize.visibility = Visibility.HIDDEN;
+                });
+
+                then("`maximize.onhide` is still called", () => {
+                  expect(onhide).toHaveBeenCalled();
+                });
+              });
+            });
+
             and("`maximize.onhide` is set to a new listener", () => {
               let onhide2: jasmine.Spy;
               beforeEach(() => {
