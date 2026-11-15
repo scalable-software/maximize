@@ -272,6 +272,19 @@ state(State.VISIBILITY, () => {
                 expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
               });
             });
+
+            when("`visibility` attribute is set to `invalid`", () => {
+              beforeEach(async () => {
+                await jasmine.spyOnGlobalErrorsAsync(async () => {
+                  maximize.setAttribute(Attributes.VISIBILITY, "invalid");
+                });
+              });
+
+              then("`visibility` attribute is `Visibility.HIDDEN`", () => {
+                const value = maximize.getAttribute(Attributes.VISIBILITY);
+                expect(value).toBe(Visibility.HIDDEN);
+              });
+            });
           });
 
           when("`maximize.visibility` is set to `null`", () => {
