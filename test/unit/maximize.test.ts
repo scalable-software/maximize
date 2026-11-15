@@ -1446,6 +1446,26 @@ gesture(Gesture.CLICK, () => {
             expect(onmaximize).toHaveBeenCalled();
           });
         });
+
+        when("user presses and lifts the pointer on `div` with class `icon`", () => {
+          let onmaximize: jasmine.Spy;
+          beforeEach(() => {
+            onmaximize = jasmine.createSpy("onmaximize");
+            maximize.onmaximize = onmaximize;
+            const icon = maximize.root.querySelector(".icon") as HTMLElement;
+            icon.dispatchEvent(new PointerEvent(Gesture.POINTERDOWN));
+            icon.dispatchEvent(new PointerEvent(Gesture.POINTERUP));
+            icon.click();
+          });
+
+          then("`maximize.status` is `Status.RELEASED`", () => {
+            expect(maximize.status).toEqual(Status.RELEASED);
+          });
+
+          then("`onmaximize` is called once", () => {
+            expect(onmaximize).toHaveBeenCalledTimes(1);
+          });
+        });
       });
     });
   });
