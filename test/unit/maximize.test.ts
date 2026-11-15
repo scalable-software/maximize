@@ -1408,3 +1408,44 @@ gesture(Gesture.POINTERLEAVE, () => {
     });
   });
 });
+
+gesture(Gesture.CLICK, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        when("user `click` on `div` with class `icon`", () => {
+          let onmaximize: jasmine.Spy;
+          beforeEach(() => {
+            onmaximize = jasmine.createSpy("onmaximize");
+            maximize.onmaximize = onmaximize;
+            const icon = maximize.root.querySelector(".icon") as HTMLElement;
+            icon.click();
+          });
+
+          then("`onmaximize` is called", () => {
+            expect(onmaximize).toHaveBeenCalled();
+          });
+        });
+      });
+    });
+  });
+});
