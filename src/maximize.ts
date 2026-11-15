@@ -13,7 +13,8 @@ import {
   Attributes,
   Visibility,
   Status,
-  Appearance
+  Appearance,
+  Event
 } from "./maximize.meta.js";
 
 import { type Meta } from "./maximize.meta.js";
@@ -84,6 +85,13 @@ export class Maximize extends Component implements Meta {
    * @hidden
    */
   private _appearance: Appearance = Appearance.FLOATING;
+
+  /**
+   * onhide triggered when maximize visibility changes to hidden
+   * @category Events
+   * @hidden
+   */
+  private _onhide: EventListener | null = null;
 
   /**
    * Cache element references to improve performance
@@ -171,6 +179,15 @@ export class Maximize extends Component implements Meta {
         Appearance.FLOATING
       );
     }
+  }
+
+  /**
+   * Triggered via `.hide()`
+   * @event
+   * @category Events
+   */
+  public set onhide(handler: EventListener | null) {
+    this._onhide = this._subscribe(Event.ON_HIDE, this._onhide, handler);
   }
 
   /**
