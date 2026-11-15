@@ -721,6 +721,37 @@ operation(Operation.HIDE, () => {
   });
 });
 
+operation(Operation.SHOW, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("`maximize.show` method exists", () => {
+          expect(maximize.show).toBeDefined();
+        });
+      });
+    });
+  });
+});
+
 // Event
 
 // Gesture
