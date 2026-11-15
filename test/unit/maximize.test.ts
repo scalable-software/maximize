@@ -10,7 +10,8 @@ import {
   Status,
   Appearance,
   Operation,
-  Event
+  Event,
+  Gesture
 } from "@scalable.software/maximize";
 
 // Configuration
@@ -1273,3 +1274,40 @@ events(Event.ON_MAXIMIZE, () => {
 });
 
 // Gesture
+gesture(Gesture.POINTERDOWN, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        when("user presses the pointer down on `div` with class `icon`", () => {
+          beforeEach(() => {
+            const icon = maximize.root.querySelector(".icon") as HTMLElement;
+            icon.dispatchEvent(new PointerEvent(Gesture.POINTERDOWN));
+          });
+
+          then("`maximize.status` is `Status.PRESSED`", () => {
+            expect(maximize.status).toEqual(Status.PRESSED);
+          });
+        });
+      });
+    });
+  });
+});
