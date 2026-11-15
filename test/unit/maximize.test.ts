@@ -1213,6 +1213,28 @@ events(Event.ON_MAXIMIZE, () => {
                 );
               });
             });
+
+            and("`maximize.onmaximize` is set to a new listener", () => {
+              let onmaximize2: jasmine.Spy;
+              beforeEach(() => {
+                onmaximize2 = jasmine.createSpy("onmaximize2");
+                maximize.onmaximize = onmaximize2;
+              });
+
+              when("`maximize.maximize` is invoked", () => {
+                beforeEach(() => {
+                  maximize.maximize();
+                });
+
+                then("old `maximize.onmaximize` is not called", () => {
+                  expect(onmaximize).not.toHaveBeenCalled();
+                });
+
+                then("new `maximize.onmaximize` is called", () => {
+                  expect(onmaximize2).toHaveBeenCalled();
+                });
+              });
+            });
           });
         });
       });
