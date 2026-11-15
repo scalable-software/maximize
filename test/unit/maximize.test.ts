@@ -485,6 +485,30 @@ state(State.STATUS, () => {
           });
         });
       });
+
+      and(
+        "a new maximize with `status` attribute `Status.PRESSED` is added to DOM",
+        () => {
+          let maximize: Maximize;
+          beforeEach(() => {
+            maximize = add<Maximize>(Maximize.Tag, {
+              [Attributes.STATUS]: Status.PRESSED
+            });
+          });
+          afterEach(() => {
+            maximize.remove();
+          });
+
+          then("`maximize.status` is `Status.RELEASED`", () => {
+            expect(maximize.status).toBe(Status.RELEASED);
+          });
+
+          then("`status` attribute is `Status.RELEASED`", () => {
+            const value = maximize.getAttribute(Attributes.STATUS);
+            expect(value).toBe(Status.RELEASED);
+          });
+        }
+      );
     });
   });
 });
