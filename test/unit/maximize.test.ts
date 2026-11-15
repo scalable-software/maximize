@@ -11,7 +11,8 @@ import {
   Appearance,
   Operation,
   Event,
-  Gesture
+  Gesture,
+  Key
 } from "@scalable.software/maximize";
 
 // Configuration
@@ -1443,6 +1444,54 @@ gesture(Gesture.CLICK, () => {
 
           then("`onmaximize` is called", () => {
             expect(onmaximize).toHaveBeenCalled();
+          });
+        });
+      });
+    });
+  });
+});
+
+gesture(Gesture.KEYDOWN, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        and("`maximize.onmaximize` is set to a listener", () => {
+          let onmaximize: jasmine.Spy;
+          beforeEach(() => {
+            onmaximize = jasmine.createSpy("onmaximize");
+            maximize.onmaximize = onmaximize;
+          });
+
+          when("user presses `Key.ENTER` on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+              );
+            });
+
+            then("`onmaximize` is called", () => {
+              expect(onmaximize).toHaveBeenCalled();
+            });
           });
         });
       });
