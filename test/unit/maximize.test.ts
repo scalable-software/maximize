@@ -579,6 +579,19 @@ state(State.APPEARANCE, () => {
                 expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
               });
             });
+
+            when("`appearance` attribute is set to `invalid`", () => {
+              beforeEach(async () => {
+                await jasmine.spyOnGlobalErrorsAsync(async () => {
+                  maximize.setAttribute(Attributes.APPEARANCE, "invalid");
+                });
+              });
+
+              then("`appearance` attribute is `Appearance.FLAT`", () => {
+                const value = maximize.getAttribute(Attributes.APPEARANCE);
+                expect(value).toBe(Appearance.FLAT);
+              });
+            });
           });
 
           when("`maximize.appearance` is set to `null`", () => {
