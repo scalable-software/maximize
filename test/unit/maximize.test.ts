@@ -591,6 +591,20 @@ state(State.APPEARANCE, () => {
             });
           });
 
+          when("`appearance` attribute is set to `invalid`", () => {
+            let error: Error;
+            beforeEach(async () => {
+              await jasmine.spyOnGlobalErrorsAsync(async (reported) => {
+                maximize.setAttribute(Attributes.APPEARANCE, "invalid");
+                error = reported.calls.mostRecent()?.args[0];
+              });
+            });
+
+            then("`appearance` attribute does not exist", () => {
+              expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
+            });
+          });
+
           when("`maximize.appearance` is set to `invalid`", () => {
             let error: Error;
             beforeEach(() => {
