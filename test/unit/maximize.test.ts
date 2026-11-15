@@ -1553,6 +1553,29 @@ gesture(Gesture.KEYDOWN, () => {
             });
           });
 
+          when("user holds `Key.ENTER` down on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+              );
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, {
+                  key: Key.ENTER,
+                  repeat: true
+                })
+              );
+            });
+
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
           when("user presses another key on `div` with class `icon`", () => {
             let keydown: KeyboardEvent;
             beforeEach(() => {
