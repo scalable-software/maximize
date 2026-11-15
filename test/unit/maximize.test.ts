@@ -1311,3 +1311,48 @@ gesture(Gesture.POINTERDOWN, () => {
     });
   });
 });
+
+gesture(Gesture.POINTERUP, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        and("user presses the pointer down on `div` with class `icon`", () => {
+          beforeEach(() => {
+            const icon = maximize.root.querySelector(".icon") as HTMLElement;
+            icon.dispatchEvent(new PointerEvent(Gesture.POINTERDOWN));
+          });
+
+          when("user lifts the pointer from `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(new PointerEvent(Gesture.POINTERUP));
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+          });
+        });
+      });
+    });
+  });
+});
