@@ -259,6 +259,16 @@ state(State.VISIBILITY, () => {
             });
           });
 
+          when("`maximize.visibility` is set to `null`", () => {
+            beforeEach(() => {
+              maximize.visibility = null;
+            });
+
+            then("`maximize.visibility` is `Visibility.VISIBLE`", () => {
+              expect(maximize.visibility).toBe(Visibility.VISIBLE);
+            });
+          });
+
           when("`maximize.visibility` is set to `invalid`", () => {
             let error: Error;
             beforeEach(() => {
