@@ -76,3 +76,32 @@ body {
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* States */
+.states {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.states fieldset {
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.states legend {
+  padding: 0 4px;
+  color: var(--muted-color);
+}
+
+.states label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
