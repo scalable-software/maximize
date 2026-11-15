@@ -251,10 +251,12 @@ export class Maximize extends Component implements Meta {
   };
 
   /**
-   * Request maximizing
+   * Request maximizing: changes no state, every call dispatches `onmaximize`
    * @category Operations
    */
-  public maximize = () => {};
+  public maximize = () => {
+    this._dispatch(Event.ON_MAXIMIZE);
+  };
 
   /**
    * Press the maximize button: called when the pointer goes down on the icon
