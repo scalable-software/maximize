@@ -566,6 +566,16 @@ state(State.APPEARANCE, () => {
             });
           });
 
+          when("`maximize.appearance` is set to `null`", () => {
+            beforeEach(() => {
+              maximize.appearance = null;
+            });
+
+            then("`maximize.appearance` is `Appearance.FLOATING`", () => {
+              expect(maximize.appearance).toBe(Appearance.FLOATING);
+            });
+          });
+
           when("`maximize.appearance` is set to `invalid`", () => {
             let error: Error;
             beforeEach(() => {
