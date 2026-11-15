@@ -873,6 +873,17 @@ operation(Operation.MAXIMIZE, () => {
                 expect(result).toBeUndefined();
               });
             });
+
+            when("invoking `maximize.maximize` twice", () => {
+              beforeEach(() => {
+                maximize.maximize();
+                maximize.maximize();
+              });
+
+              then("`maximize.onmaximize` is called twice", () => {
+                expect(onmaximize).toHaveBeenCalledTimes(2);
+              });
+            });
           });
         });
       });
