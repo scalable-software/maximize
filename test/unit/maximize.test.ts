@@ -1635,6 +1635,40 @@ gesture(Gesture.KEYUP, () => {
             maximize.onmaximize = onmaximize;
           });
 
+          when("user lifts `Key.ENTER` on `div` with class `icon` without pressing it", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+              );
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          when("user lifts `Key.SPACE` on `div` with class `icon` without pressing it", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYUP, { key: Key.SPACE })
+              );
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
           and("user presses `Key.ENTER` on `div` with class `icon`", () => {
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
