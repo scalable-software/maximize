@@ -296,6 +296,21 @@ state(State.VISIBILITY, () => {
             then("`visibility` attribute does not exist", () => {
               expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
             });
+
+            then("`maximize.visibility` is `Visibility.VISIBLE`", () => {
+              expect(maximize.visibility).toBe(Visibility.VISIBLE);
+            });
+
+            then("an error is reported", () => {
+              expect(error).toBeDefined();
+            });
+
+            then(
+              "error message contains 'Invalid visibility value: invalid'",
+              () => {
+                expect(error.message).toBe("Invalid visibility value: invalid");
+              }
+            );
           });
 
           when("`maximize.visibility` is set to `invalid`", () => {
