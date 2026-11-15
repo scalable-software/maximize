@@ -1022,6 +1022,36 @@ events(Event.ON_SHOW, () => {
                 maximize.onshow = onshow;
               });
 
+              when("`maximize.onshow` is set to `invalid`", () => {
+                let error: Error;
+                beforeEach(() => {
+                  try {
+                    // @ts-expect-error
+                    maximize.onshow = "invalid";
+                  } catch (err) {
+                    error = err as Error;
+                  }
+                });
+
+                then("an error is thrown", () => {
+                  expect(error).toBeDefined();
+                });
+
+                then("error message contains 'Invalid onshow value: invalid'", () => {
+                  expect(error.message).toBe("Invalid onshow value: invalid");
+                });
+
+                when("`maximize.visibility` is set to `Visibility.VISIBLE`", () => {
+                  beforeEach(() => {
+                    maximize.visibility = Visibility.VISIBLE;
+                  });
+
+                  then("`maximize.onshow` is still called", () => {
+                    expect(onshow).toHaveBeenCalled();
+                  });
+                });
+              });
+
               and("`maximize.onshow` is set to a new listener", () => {
                 let onshow2: jasmine.Spy;
                 beforeEach(() => {
