@@ -7,7 +7,8 @@ import {
   Attributes,
   State,
   Visibility,
-  Status
+  Status,
+  Appearance
 } from "@scalable.software/maximize";
 
 // Configuration
@@ -509,6 +510,47 @@ state(State.STATUS, () => {
           });
         }
       );
+    });
+  });
+});
+
+state(State.APPEARANCE, () => {
+  given("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("a HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("`maximize.appearance` getter exists", () => {
+          expect(maximize.appearance).toBeDefined();
+        });
+
+        when("`maximize.appearance` getter exists", () => {
+          then("`maximize.appearance` is `Appearance.FLOATING`", () => {
+            expect(maximize.appearance).toBe(Appearance.FLOATING);
+          });
+        });
+
+        then("`appearance` attribute does not exist", () => {
+          expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
+        });
+      });
     });
   });
 });
