@@ -1,0 +1,140 @@
+import { Template } from "@scalable.software/component";
+
+import { Maximize, Tag, CSS, Attributes } from "@scalable.software/maximize";
+
+// Configuration
+configuration(Configuration.TAG, () => {
+  and("Maximize imported", () => {
+    then("Maximize is defined", () => {
+      expect(Maximize).toBeDefined();
+    });
+
+    and("Maximize is defined", () => {
+      then("Maximize.Tag static getter is defined", () => {
+        expect(Maximize.Tag).toBeDefined();
+      });
+
+      and("Maximize.Tag static getter is defined", () => {
+        then("Maximize.Tag is Tag", () => {
+          expect(Maximize.Tag).toBe(Tag);
+        });
+      });
+    });
+  });
+});
+
+configuration(Configuration.ATTRIBUTES, () => {
+  and("Maximize imported", () => {
+    then("Maximize is defined", () => {
+      expect(Maximize).toBeDefined();
+    });
+
+    and("Maximize is defined", () => {
+      then("Maximize.Attributes static getter is defined", () => {
+        expect(Maximize.Attributes).toBeDefined();
+      });
+
+      and("Maximize.Attributes static getter is defined", () => {
+        then("Maximize.Attributes is Attributes", () => {
+          expect(Maximize.Attributes).toBe(Attributes);
+        });
+      });
+    });
+  });
+});
+
+// Utilities
+utility(Utilities.TEMPLATE, () => {
+  then("Maximize.Template static property is defined", () => {
+    expect(Maximize.Template).toBeDefined();
+  });
+
+  and("Maximize.Template static property is defined", () => {
+    then("Maximize.Template is a Template", () => {
+      expect(Maximize.Template).toBeInstanceOf(Template);
+    });
+  });
+});
+
+// Compositions
+composition(Composition.TEMPLATE, () => {
+  given("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      let template: HTMLTemplateElement;
+      beforeEach(async () => {
+        template = (await Maximize.Template.load(
+          "maximize.template.html"
+        )) as HTMLTemplateElement;
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      then("template is defined", () => {
+        expect(template).toBeDefined();
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("maximize.root contents contains template contents", () => {
+          expect(maximize.root.innerHTML).toContain(template.innerHTML);
+        });
+      });
+    });
+  });
+});
+
+composition(Composition.CSS, () => {
+  given("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("maximize.root contents contains a link to stylesheet", () => {
+          expect(maximize.root.innerHTML).toContain("stylesheet");
+        });
+
+        and("maximize.root contents contains a link to stylesheet", () => {
+          then("the stylesheet file's name is correct", () => {
+            expect(maximize.root.innerHTML).toContain(CSS);
+          });
+        });
+      });
+    });
+  });
+});
+
+// State
+
+// Operation
+
+// Event
+
+// Gesture

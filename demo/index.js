@@ -1,5 +1,5 @@
-import { component } from "@scalable.software/component.template";
+import { Maximize } from "@scalable.software/maximize";
 
-await component.Template.load("component.template.html");
+await Maximize.Template.load("maximize.template.html");
 
-customElements.define(component.Tag, component);
+customElements.define(Maximize.Tag, Maximize);
