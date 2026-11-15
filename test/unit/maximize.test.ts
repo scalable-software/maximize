@@ -284,6 +284,20 @@ state(State.VISIBILITY, () => {
             });
           });
 
+          when("`visibility` attribute is set to `invalid`", () => {
+            let error: Error;
+            beforeEach(async () => {
+              await jasmine.spyOnGlobalErrorsAsync(async (reported) => {
+                maximize.setAttribute(Attributes.VISIBILITY, "invalid");
+                error = reported.calls.mostRecent()?.args[0];
+              });
+            });
+
+            then("`visibility` attribute does not exist", () => {
+              expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
+            });
+          });
+
           when("`maximize.visibility` is set to `invalid`", () => {
             let error: Error;
             beforeEach(() => {
