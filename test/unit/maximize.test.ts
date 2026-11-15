@@ -128,6 +128,10 @@ composition(Composition.TEMPLATE, () => {
             then("`div.icon` has `role` `button`", () => {
               expect(div.getAttribute("role")).toBe("button");
             });
+
+            then("`div.icon` has `aria-label` `Maximize`", () => {
+              expect(div.getAttribute("aria-label")).toBe("Maximize");
+            });
           });
         });
       });
