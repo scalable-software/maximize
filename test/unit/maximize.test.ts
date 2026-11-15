@@ -103,6 +103,11 @@ composition(Composition.TEMPLATE, () => {
               div = maximize.root.querySelector("div.icon") as HTMLDivElement;
             });
 
+            then("`div.icon` contains `svg.maximize`", () => {
+              const svg = div.querySelector("svg.maximize");
+              expect(svg).not.toBeNull();
+            });
+
             then("`div.icon` has `tabindex` `0`", () => {
               expect(div.getAttribute("tabindex")).toBe("0");
             });
