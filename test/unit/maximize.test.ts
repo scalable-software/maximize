@@ -128,6 +128,10 @@ composition(Composition.TEMPLATE, () => {
             then("`div.icon` has `role` `button`", () => {
               expect(div.getAttribute("role")).toBe("button");
             });
+
+            then("`div.icon` has `aria-label` `Maximize`", () => {
+              expect(div.getAttribute("aria-label")).toBe("Maximize");
+            });
           });
         });
       });
@@ -1502,6 +1506,170 @@ gesture(Gesture.KEYDOWN, () => {
           });
 
           when("user presses `Key.ENTER` on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: Key.ENTER,
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is prevented", () => {
+              expect(keydown.defaultPrevented).toBeTrue();
+            });
+
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          when("user presses `Key.SPACE` on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: Key.SPACE,
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is prevented", () => {
+              expect(keydown.defaultPrevented).toBeTrue();
+            });
+
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          when("user holds `Key.ENTER` down on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+              );
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, {
+                  key: Key.ENTER,
+                  repeat: true
+                })
+              );
+            });
+
+            then("`maximize.status` is `Status.PRESSED`", () => {
+              expect(maximize.status).toEqual(Status.PRESSED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          when("user presses another key on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: "a",
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is not prevented", () => {
+              expect(keydown.defaultPrevented).toBeFalse();
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
+gesture(Gesture.KEYUP, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        and("`maximize.onmaximize` is set to a listener", () => {
+          let onmaximize: jasmine.Spy;
+          beforeEach(() => {
+            onmaximize = jasmine.createSpy("onmaximize");
+            maximize.onmaximize = onmaximize;
+          });
+
+          when("user lifts `Key.ENTER` on `div` with class `icon` without pressing it", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+              );
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          when("user lifts `Key.SPACE` on `div` with class `icon` without pressing it", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYUP, { key: Key.SPACE })
+              );
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
+
+          and("user presses `Key.ENTER` on `div` with class `icon`", () => {
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
               icon.dispatchEvent(
@@ -1509,12 +1677,64 @@ gesture(Gesture.KEYDOWN, () => {
               );
             });
 
-            then("`onmaximize` is called", () => {
-              expect(onmaximize).toHaveBeenCalled();
+            when("user lifts `Key.ENTER` on `div` with class `icon`", () => {
+              beforeEach(() => {
+                const icon = maximize.root.querySelector(".icon") as HTMLElement;
+                icon.dispatchEvent(
+                  new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+                );
+              });
+
+              then("`onmaximize` is called once", () => {
+                expect(onmaximize).toHaveBeenCalledTimes(1);
+              });
+
+              then("`maximize.status` is `Status.RELEASED`", () => {
+                expect(maximize.status).toEqual(Status.RELEASED);
+              });
+
+              when("user lifts `Key.ENTER` on `div` with class `icon` again", () => {
+                beforeEach(() => {
+                  const icon = maximize.root.querySelector(
+                    ".icon"
+                  ) as HTMLElement;
+                  icon.dispatchEvent(
+                    new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+                  );
+                });
+
+                then("`onmaximize` is called once", () => {
+                  expect(onmaximize).toHaveBeenCalledTimes(1);
+                });
+              });
             });
           });
 
-          when("user presses `Key.SPACE` on `div` with class `icon`", () => {
+          and("user presses `Key.ENTER` on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+              );
+            });
+
+            when("user lifts another key on `div` with class `icon`", () => {
+              beforeEach(() => {
+                const icon = maximize.root.querySelector(".icon") as HTMLElement;
+                icon.dispatchEvent(new KeyboardEvent(Gesture.KEYUP, { key: "a" }));
+              });
+
+              then("`maximize.status` is `Status.PRESSED`", () => {
+                expect(maximize.status).toEqual(Status.PRESSED);
+              });
+
+              then("`onmaximize` is not called", () => {
+                expect(onmaximize).not.toHaveBeenCalled();
+              });
+            });
+          });
+
+          and("user presses `Key.SPACE` on `div` with class `icon`", () => {
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
               icon.dispatchEvent(
@@ -1522,21 +1742,103 @@ gesture(Gesture.KEYDOWN, () => {
               );
             });
 
-            then("`onmaximize` is called", () => {
-              expect(onmaximize).toHaveBeenCalled();
+            when("user lifts `Key.SPACE` on `div` with class `icon`", () => {
+              beforeEach(() => {
+                const icon = maximize.root.querySelector(".icon") as HTMLElement;
+                icon.dispatchEvent(
+                  new KeyboardEvent(Gesture.KEYUP, { key: Key.SPACE })
+                );
+              });
+
+              then("`onmaximize` is called once", () => {
+                expect(onmaximize).toHaveBeenCalledTimes(1);
+              });
+
+              then("`maximize.status` is `Status.RELEASED`", () => {
+                expect(maximize.status).toEqual(Status.RELEASED);
+              });
+
+              when("user lifts `Key.SPACE` on `div` with class `icon` again", () => {
+                beforeEach(() => {
+                  const icon = maximize.root.querySelector(
+                    ".icon"
+                  ) as HTMLElement;
+                  icon.dispatchEvent(
+                    new KeyboardEvent(Gesture.KEYUP, { key: Key.SPACE })
+                  );
+                });
+
+                then("`onmaximize` is called once", () => {
+                  expect(onmaximize).toHaveBeenCalledTimes(1);
+                });
+              });
             });
           });
+        });
+      });
+    });
+  });
+});
 
-          when("user presses another key on `div` with class `icon`", () => {
+gesture(Gesture.BLUR, () => {
+  and("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        and("user presses `Key.ENTER` on `div` with class `icon`", () => {
+          let onmaximize: jasmine.Spy;
+          beforeEach(() => {
+            onmaximize = jasmine.createSpy("onmaximize");
+            maximize.onmaximize = onmaximize;
+            const icon = maximize.root.querySelector(".icon") as HTMLElement;
+            icon.dispatchEvent(
+              new KeyboardEvent(Gesture.KEYDOWN, { key: Key.ENTER })
+            );
+          });
+
+          when("`div` with class `icon` loses focus", () => {
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
-              icon.dispatchEvent(
-                new KeyboardEvent(Gesture.KEYDOWN, { key: "a" })
-              );
+              icon.dispatchEvent(new FocusEvent(Gesture.BLUR));
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
             });
 
             then("`onmaximize` is not called", () => {
               expect(onmaximize).not.toHaveBeenCalled();
+            });
+
+            when("user lifts `Key.ENTER` on `div` with class `icon`", () => {
+              beforeEach(() => {
+                const icon = maximize.root.querySelector(".icon") as HTMLElement;
+                icon.dispatchEvent(
+                  new KeyboardEvent(Gesture.KEYUP, { key: Key.ENTER })
+                );
+              });
+
+              then("`onmaximize` is not called", () => {
+                expect(onmaximize).not.toHaveBeenCalled();
+              });
             });
           });
         });
