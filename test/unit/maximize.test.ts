@@ -407,6 +407,18 @@ state(State.STATUS, () => {
             expect(maximize.status).toBe(Status.RELEASED);
           });
         });
+
+        then("`status` attribute exists", () => {
+          const value = maximize.getAttribute(Attributes.STATUS);
+          expect(value).not.toBeNull();
+        });
+
+        and("`status` attribute exists", () => {
+          then("`status` attribute is `Status.RELEASED`", () => {
+            const value = maximize.getAttribute(Attributes.STATUS);
+            expect(value).toBe(Status.RELEASED);
+          });
+        });
       });
     });
   });
