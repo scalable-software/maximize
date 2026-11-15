@@ -14,7 +14,8 @@ import {
   Visibility,
   Status,
   Appearance,
-  Event
+  Event,
+  Gesture
 } from "./maximize.meta.js";
 
 import { type Meta } from "./maximize.meta.js";
@@ -312,12 +313,29 @@ export class Maximize extends Component implements Meta {
    * @category Configuration
    * @hidden
    */
-  protected _addEventListeners = () => {};
+  protected _addEventListeners = () => {
+    this.elements.icon?.addEventListener(
+      Gesture.POINTERDOWN,
+      this._handleIconPointerdown
+    );
+  };
 
   /**
    * Called by the disconnectedCallback prototypical method
    * @category Configuration
    * @hidden
    */
-  protected _removeEventListeners = () => {};
+  protected _removeEventListeners = () => {
+    this.elements.icon?.removeEventListener(
+      Gesture.POINTERDOWN,
+      this._handleIconPointerdown
+    );
+  };
+
+  /**
+   * Handles the pointer going down on the icon: presses the maximize button
+   * @category Gesture
+   * @hidden
+   */
+  private _handleIconPointerdown = () => this._press();
 }
