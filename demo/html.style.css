@@ -11,12 +11,16 @@ body {
   min-height: 100%;
   background-color: inherit;
   color: inherit;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
 }
 
 /* Root Variables */
 :root {
   --background-color: #ffffff;
   --text-color: #000000;
+  --line-color: #d1d1d1;
+  --muted-color: #5a5a5a;
 }
 
 /* Dark Mode Styles */
@@ -24,11 +28,26 @@ body {
   :root {
     --background-color: #1e1e1e;
     --text-color: #f0f0f0;
+    --line-color: #3c3c3c;
+    --muted-color: #cfcfcf;
   }
 }
 
-maximize-button {
-  position: absolute;
-  left: 48px;
-  top: 48px;
+/* The stage: the component, in a band across the top */
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  padding: 24px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--line-color);
+}
+
+/* The controls: one group for each section of the specification */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 16px;
 }
