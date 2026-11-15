@@ -12,74 +12,94 @@ customElements.define(Maximize.Tag, Maximize);
 
 const maximize = document.querySelector(Maximize.Tag);
 
-/* Operations: one button for each operation */
-const operations = document.querySelector("#operations .buttons");
+/* ───────────────────────────── States ───────────────────────────── */
 
-Object.values(Operation).forEach((name) => {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = name;
-  button.addEventListener("click", () => maximize[name]());
-  operations.append(button);
-});
-
-/* States: a choice for each writable state, text for each readonly state */
-const states = document.querySelector("#states .states");
-
+// The value list of each writable state. A state without one is readonly.
 const choices = {
   [State.VISIBILITY]: Visibility,
   [State.APPEARANCE]: Appearance
 };
 
-const followers = Object.values(State).map((name) => {
-  const row = document.createElement("fieldset");
-  const legend = document.createElement("legend");
-  row.append(legend);
-  states.append(row);
+const states = document.querySelector("#states");
 
-  // A readonly state is shown as text, with no control
-  if (!(name in choices)) {
-    legend.textContent = `${name} (readonly)`;
-    const value = document.createElement("output");
-    row.append(value);
-    return () => (value.textContent = maximize[name]);
-  }
+const addChoice = (state, values) => {
+  const select = document.createElement("select");
+  select.id = state;
+  Object.values(values).forEach((value) => select.add(new Option(value)));
+  select.addEventListener("change", () => (maximize[state] = select.value));
+  return select;
+};
 
-  // A writable state has one choice for each of its values: choosing sets the property
-  legend.textContent = name;
-  const inputs = Object.values(choices[name]).map((value) => {
-    const label = document.createElement("label");
-    const input = document.createElement("input");
-    input.type = "radio";
-    input.name = name;
-    input.value = value;
-    input.addEventListener("change", () => (maximize[name] = value));
-    label.append(input, value);
-    row.append(label);
-    return input;
-  });
-  return () =>
-    inputs.forEach((input) => (input.checked = input.value === maximize[name]));
+const addText = (state) => {
+  const output = document.createElement("output");
+  output.id = state;
+  output.title = "readonly";
+  return output;
+};
+
+Object.values(State).forEach((state) => {
+  const name = document.createElement("dt");
+  const label = document.createElement("label");
+  label.htmlFor = state;
+  label.textContent = choices[state] ? state : `${state} (readonly)`;
+  name.append(label);
+
+  const value = document.createElement("dd");
+  value.append(
+    choices[state] ? addChoice(state, choices[state]) : addText(state)
+  );
+
+  states.append(name, value);
 });
 
-// States are attributes: the page follows the component by watching them
-const follow = () => followers.forEach((update) => update());
+// States are attributes: follow the component when it changes one itself.
+const follow = () =>
+  Object.values(State).forEach(
+    (state) => (states.querySelector(`#${state}`).value = maximize[state])
+  );
 
 new MutationObserver(follow).observe(maximize, { attributes: true });
-
 follow();
 
-/* Events: a log of every event, oldest first, with its time and its detail */
-const log = document.querySelector("#events .log");
+/* ───────────────────────────── Operations ───────────────────────────── */
 
-maximize.onevent = (event) => {
+const operations = document.querySelector("#operations");
+
+Object.values(Operation).forEach((operation) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = operation;
+  button.addEventListener("click", () => maximize[operation]());
+  operations.append(button);
+});
+
+/* ───────────────────────────── Events ───────────────────────────── */
+
+const events = document.querySelector("#events");
+
+const log = (event) => {
   const entry = document.createElement("li");
-  const time = new Date().toLocaleTimeString();
-  const detail = event.detail == null ? "" : JSON.stringify(event.detail);
-  entry.textContent = [time, event.type, detail].join(" ").trim();
-  log.append(entry);
+
+  const time = document.createElement("time");
+  time.textContent = new Date().toLocaleTimeString();
+
+  const type = document.createElement("strong");
+  type.textContent = event.type;
+
+  entry.append(time, type);
+
+  if (event.detail !== null) {
+    const detail = document.createElement("code");
+    detail.textContent = JSON.stringify(event.detail);
+    entry.append(detail);
+  }
+
+  events.append(entry);
 };
+
+// `onevent` receives every event, and leaves the `on…` properties free.
+maximize.onevent = log;
 
 document
   .querySelector("#clear")
-  .addEventListener("click", () => log.replaceChildren());
+  .addEventListener("click", () => events.replaceChildren());

@@ -1,8 +1,29 @@
-/* Default Styles (Light Mode) */
+/* Root Variables (Light Mode) */
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --muted-color: #5a5a5a;
+  --line-color: #d1d1d1;
+  --surface-color: #f6f6f6;
+}
+
+/* Dark Mode Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1e1e1e;
+    --text-color: #f0f0f0;
+    --muted-color: #a8a8a8;
+    --line-color: #3c3c3c;
+    --surface-color: #262626;
+  }
+}
+
 html {
   height: 100%;
   background-color: var(--background-color);
   color: var(--text-color);
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
 }
 
 body {
@@ -11,26 +32,6 @@ body {
   min-height: 100%;
   background-color: inherit;
   color: inherit;
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-}
-
-/* Root Variables */
-:root {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --line-color: #d1d1d1;
-  --muted-color: #5a5a5a;
-}
-
-/* Dark Mode Styles */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #1e1e1e;
-    --text-color: #f0f0f0;
-    --line-color: #3c3c3c;
-    --muted-color: #cfcfcf;
-  }
 }
 
 /* The stage: the component, in a band across the top */
@@ -40,14 +41,13 @@ body {
   justify-content: center;
   min-height: 96px;
   padding: 24px;
-  box-sizing: border-box;
   border-bottom: 1px solid var(--line-color);
 }
 
-/* The controls: one group for each section of the specification */
+/* The controls: one column for each group, stacked on a narrow window */
 .controls {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 16px;
   padding: 16px;
 }
@@ -57,17 +57,30 @@ body {
   padding: 16px;
   border: 1px solid var(--line-color);
   border-radius: 8px;
+  background-color: var(--surface-color);
 }
 
 .group h2 {
   margin: 0 0 12px;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.group button {
-  font: inherit;
-  padding: 4px 12px;
-  cursor: pointer;
+/* States */
+#states {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: center;
+  margin: 0;
+}
+
+#states dt {
+  color: var(--muted-color);
+}
+
+#states dd {
+  margin: 0;
 }
 
 /* Operations */
@@ -77,40 +90,39 @@ body {
   gap: 8px;
 }
 
-/* States */
-.states {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.states fieldset {
-  margin: 0;
-  padding: 8px 12px;
+button,
+select {
+  padding: 4px 12px;
   border: 1px solid var(--line-color);
   border-radius: 4px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
+  background-color: var(--background-color);
+  color: inherit;
+  font: inherit;
 }
 
-.states legend {
-  padding: 0 4px;
-  color: var(--muted-color);
-}
-
-.states label {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+button {
   cursor: pointer;
 }
 
 /* Events */
-.log {
+#events {
   margin: 12px 0 0;
-  padding-left: 24px;
-  font-family: ui-monospace, monospace;
-  font-size: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+#events li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 4px 0;
+  border-top: 1px solid var(--line-color);
+}
+
+#events time {
+  color: var(--muted-color);
+}
+
+#events code {
   overflow-wrap: anywhere;
 }
