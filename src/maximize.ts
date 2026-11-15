@@ -205,6 +205,15 @@ export class Maximize extends Component implements Meta {
   };
 
   /**
+   * Release the maximize button: called when the pointer is lifted from the icon or leaves it
+   * @category Operations
+   * @hidden
+   */
+  private _release = () => {
+    this.status = Status.RELEASED;
+  };
+
+  /**
    * List operations to perform for selected attributes being observed in the DOM.
    * @category Configuration
    * @hidden
