@@ -394,10 +394,14 @@ export class Maximize extends Component implements Meta {
   private _handleIconClick = () => this.maximize();
 
   /**
-   * Handles a key going down on the icon: Enter or Space presses the maximize button
+   * Handles a key going down on the icon: Enter or Space presses the maximize button,
+   * and the page does not scroll
    * @category Gesture
    * @hidden
    */
-  private _handleIconKeydown = (event: KeyboardEvent) =>
-    (event.key === Key.ENTER || event.key === Key.SPACE) && this._press();
+  private _handleIconKeydown = (event: KeyboardEvent) => {
+    if (event.key !== Key.ENTER && event.key !== Key.SPACE) return;
+    event.preventDefault();
+    this._press();
+  };
 }
