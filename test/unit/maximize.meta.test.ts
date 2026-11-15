@@ -243,6 +243,14 @@ metadata(Metadata.OPERATION, () => {
         then("`Operation.SHOW` is `show`", () => {
           expect(Operation.SHOW).toBe("show");
         });
+
+        then("`Operation.MAXIMIZE` exists", () => {
+          expect(Operation.MAXIMIZE).toBeDefined();
+        });
+
+        then("`Operation.MAXIMIZE` is `maximize`", () => {
+          expect(Operation.MAXIMIZE).toBe("maximize");
+        });
       });
     });
   });
