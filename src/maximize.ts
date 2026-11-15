@@ -178,6 +178,12 @@ export class Maximize extends Component implements Meta {
   };
 
   /**
+   * Request maximizing
+   * @category Operations
+   */
+  public maximize = () => {};
+
+  /**
    * List operations to perform for selected attributes being observed in the DOM.
    * @category Configuration
    * @hidden
