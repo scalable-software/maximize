@@ -891,6 +891,17 @@ events(Event.ON_HIDE, () => {
               maximize.onhide = onhide;
             });
 
+            when("`maximize.visibility` is set to `Visibility.HIDDEN` twice", () => {
+              beforeEach(() => {
+                maximize.visibility = Visibility.HIDDEN;
+                maximize.visibility = Visibility.HIDDEN;
+              });
+
+              then("`maximize.onhide` is called once", () => {
+                expect(onhide).toHaveBeenCalledTimes(1);
+              });
+            });
+
             when("`maximize.visibility` is set to `Visibility.HIDDEN`", () => {
               beforeEach(() => {
                 maximize.visibility = Visibility.HIDDEN;
