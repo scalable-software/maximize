@@ -105,3 +105,12 @@ body {
   gap: 4px;
   cursor: pointer;
 }
+
+/* Events */
+.log {
+  margin: 12px 0 0;
+  padding-left: 24px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}

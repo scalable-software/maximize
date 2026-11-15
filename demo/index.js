@@ -68,3 +68,18 @@ const follow = () => followers.forEach((update) => update());
 new MutationObserver(follow).observe(maximize, { attributes: true });
 
 follow();
+
+/* Events: a log of every event, oldest first, with its time and its detail */
+const log = document.querySelector("#events .log");
+
+maximize.onevent = (event) => {
+  const entry = document.createElement("li");
+  const time = new Date().toLocaleTimeString();
+  const detail = event.detail == null ? "" : JSON.stringify(event.detail);
+  entry.textContent = [time, event.type, detail].join(" ").trim();
+  log.append(entry);
+};
+
+document
+  .querySelector("#clear")
+  .addEventListener("click", () => log.replaceChildren());
