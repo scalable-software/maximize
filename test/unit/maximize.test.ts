@@ -262,6 +262,16 @@ state(State.VISIBILITY, () => {
               const value = maximize.getAttribute(Attributes.VISIBILITY);
               expect(value).toBe(Visibility.HIDDEN);
             });
+
+            when("`maximize.visibility` is set to `Visibility.VISIBLE`", () => {
+              beforeEach(() => {
+                maximize.visibility = Visibility.VISIBLE;
+              });
+
+              then("`visibility` attribute does not exist", () => {
+                expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
+              });
+            });
           });
 
           when("`maximize.visibility` is set to `null`", () => {
