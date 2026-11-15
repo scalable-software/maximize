@@ -56,7 +56,9 @@ The demo page shows the component in a band across the top, and three groups bel
    - `onmaximize` is logged again: the operation makes the same request as a click.
 
 3. **Focus** the `<maximize-button>` with the Tab key and press **Enter** or the **space bar**.
-   - Each key press logs `onmaximize`.
+   - While the key is held down, the button looks pressed and **States** shows `status` as `pressed`; holding it logs nothing, and the page does not scroll.
+   - When the key is lifted, the button is released and **Events** logs `onmaximize`, once for each press.
+   - Press a key, move the focus away with the Tab key, and let go: the button is released and nothing is logged.
 
 4. **Press** **hide** and then **show** under **Operations**, or choose a `visibility` under **States**.
    - The button disappears and comes back, and `onhide` and `onshow` are logged with their `detail`.
@@ -84,7 +86,7 @@ maximize.status; // "released"
 
 ### 3.1 Composition
 
-- **Template** (`maximize.template.html`): a `.icon` container, focusable and announced as a button, holding the SVG icon of a single square.
+- **Template** (`maximize.template.html`): a `.icon` container, focusable and announced as the button "Maximize", holding the SVG icon of a single square.
 - **Style** (`maximize.style.css`): the look of the button, its pressed, hover and flat variants, and the light and dark themes.
 - **Class** (`maximize.ts`): extends the base component; holds the states, the operations, the event subscriptions and the gesture handlers.
 - **Metadata** (`maximize.meta.ts`): the names and the values of everything the component has.
@@ -99,7 +101,7 @@ Lifecycle methods are implemented in the base class and extended by the **Maximi
   2. Clones the HTML template into the Shadow Root.
   3. Inserts a `<link>` for scoped CSS.
   4. Puts the `status` attribute in place.
-  5. Sets up the listeners on the icon: `pointerdown`, `pointerup`, `pointerleave`, `click` and `keydown`.
+  5. Sets up the listeners on the icon: `pointerdown`, `pointerup`, `pointerleave`, `click`, `keydown`, `keyup` and `blur`.
 
 - **`disconnectedCallback()`**
   - Removes the listeners.
@@ -115,7 +117,7 @@ Lifecycle methods are implemented in the base class and extended by the **Maximi
   - **Optional attribute**: absent when `visible` (the default); present as `[visibility="hidden"]` when hidden.
 
 - **`status`** (`released` | `pressed`), **readonly**
-  - Whether the button is being pressed. It is `pressed` from the moment the pointer goes down on the icon until it is lifted or leaves the icon, and `released` at all other times.
+  - Whether the button is being pressed. It is `pressed` from the moment the pointer goes down on the icon until it is lifted or leaves the icon, and from the moment Enter or Space goes down on the focused icon until the key is lifted or the icon loses focus. It is `released` at all other times.
   - **Compulsory attribute**: always present, so that the stylesheet can show the pressed look through `:host([status="pressed"])`.
   - Only the component changes it. It has no public setter, and an attribute that is changed or removed from outside is put back.
 
@@ -170,10 +172,12 @@ maximize.addEventListener("onmaximize", () => {
 | `pointerup` | the icon | the button becomes `released` |
 | `pointerleave` | the icon | the button becomes `released`, and no request is made |
 | `click` | the icon | calls `maximize()` |
-| `keydown` | the icon | calls `maximize()` when the key is Enter or Space |
+| `keydown` | the icon | the button becomes `pressed` when the key is Enter or Space, and the page does not scroll |
+| `keyup` | the icon | when the key is Enter or Space: calls `maximize()` if the button is `pressed`, then the button becomes `released` |
+| `blur` | the icon | the button becomes `released`, and no request is made |
 | hover | the icon | changes the background, the border, the shadow and the colour of the icon |
 
-The button behaves like the matching control in the corner of a desktop window: it looks pressed while it is held, the request is made when the pointer is let go on it, and moving away before letting go makes no request.
+The button behaves like the matching control in the corner of a desktop window: it looks pressed while it is held, the request is made when the pointer is let go on it, and moving away before letting go makes no request. It acts the same under the keyboard: the request is made when Enter or Space is lifted, once for each press, and moving the focus away before lifting the key makes no request. Assistive technology announces it by its name, "Maximize", through the `aria-label` of the icon.
 
 ---
 
