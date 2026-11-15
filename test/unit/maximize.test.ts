@@ -569,6 +569,16 @@ state(State.APPEARANCE, () => {
               const value = maximize.getAttribute(Attributes.APPEARANCE);
               expect(value).toBe(Appearance.FLAT);
             });
+
+            when("`maximize.appearance` is set to `Appearance.FLOATING`", () => {
+              beforeEach(() => {
+                maximize.appearance = Appearance.FLOATING;
+              });
+
+              then("`appearance` attribute does not exist", () => {
+                expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
+              });
+            });
           });
 
           when("`maximize.appearance` is set to `null`", () => {
