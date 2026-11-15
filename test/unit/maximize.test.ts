@@ -1506,6 +1506,19 @@ gesture(Gesture.KEYDOWN, () => {
               expect(onmaximize).toHaveBeenCalled();
             });
           });
+
+          when("user presses another key on `div` with class `icon`", () => {
+            beforeEach(() => {
+              const icon = maximize.root.querySelector(".icon") as HTMLElement;
+              icon.dispatchEvent(
+                new KeyboardEvent(Gesture.KEYDOWN, { key: "a" })
+              );
+            });
+
+            then("`onmaximize` is not called", () => {
+              expect(onmaximize).not.toHaveBeenCalled();
+            });
+          });
         });
       });
     });
