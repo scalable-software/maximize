@@ -747,6 +747,29 @@ operation(Operation.SHOW, () => {
         then("`maximize.show` method exists", () => {
           expect(maximize.show).toBeDefined();
         });
+
+        and("`maximize.show` method exists", () => {
+          and("`maximize.visibility` is `Visibility.HIDDEN`", () => {
+            beforeEach(() => {
+              maximize.visibility = Visibility.HIDDEN;
+            });
+
+            when("invoking `maximize.show`", () => {
+              let result: unknown;
+              beforeEach(() => {
+                result = maximize.show();
+              });
+
+              then("`maximize.visibility` is `Visibility.VISIBLE`", () => {
+                expect(maximize.visibility).toBe(Visibility.VISIBLE);
+              });
+
+              then("`maximize.show` returns nothing", () => {
+                expect(result).toBeUndefined();
+              });
+            });
+          });
+        });
       });
     });
   });
