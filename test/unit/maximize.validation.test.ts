@@ -1,4 +1,4 @@
-import { State, Visibility } from "@scalable.software/maximize";
+import { State, Visibility, Appearance } from "@scalable.software/maximize";
 
 import { Validate } from "@scalable.software/maximize";
 
@@ -91,6 +91,74 @@ validation(State.VISIBILITY, () => {
             expect((error as Error).message).toEqual(
               "Invalid visibility value: invalid"
             );
+          });
+        });
+      });
+    });
+  });
+});
+
+validation(State.APPEARANCE, () => {
+  given("Validate imported", () => {
+    then("Validate is defined", () => {
+      expect(Validate).toBeDefined();
+    });
+
+    and("Validate is defined", () => {
+      then("`Validate.appearance` static method exists", () => {
+        expect(Validate.appearance).toBeDefined();
+      });
+
+      and("`value` is `Appearance.FLOATING`", () => {
+        let value: any;
+        beforeEach(() => {
+          value = Appearance.FLOATING;
+        });
+
+        when("`Validate.appearance(value)` is called", () => {
+          let error: unknown | undefined;
+          let result: any;
+          beforeEach(() => {
+            try {
+              result = Validate.appearance(value);
+            } catch (err) {
+              error = err;
+            }
+          });
+
+          then("no error is thrown", () => {
+            expect(error).toBeUndefined();
+          });
+
+          then("result is `Appearance.FLOATING`", () => {
+            expect(result).toBe(Appearance.FLOATING);
+          });
+        });
+      });
+
+      and("`value` is `Appearance.FLAT`", () => {
+        let value: any;
+        beforeEach(() => {
+          value = Appearance.FLAT;
+        });
+
+        when("`Validate.appearance(value)` is called", () => {
+          let error: unknown | undefined;
+          let result: any;
+          beforeEach(() => {
+            try {
+              result = Validate.appearance(value);
+            } catch (err) {
+              error = err;
+            }
+          });
+
+          then("no error is thrown", () => {
+            expect(error).toBeUndefined();
+          });
+
+          then("result is `Appearance.FLAT`", () => {
+            expect(result).toBe(Appearance.FLAT);
           });
         });
       });
