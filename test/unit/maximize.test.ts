@@ -1554,11 +1554,22 @@ gesture(Gesture.KEYDOWN, () => {
           });
 
           when("user presses another key on `div` with class `icon`", () => {
+            let keydown: KeyboardEvent;
             beforeEach(() => {
               const icon = maximize.root.querySelector(".icon") as HTMLElement;
-              icon.dispatchEvent(
-                new KeyboardEvent(Gesture.KEYDOWN, { key: "a" })
-              );
+              keydown = new KeyboardEvent(Gesture.KEYDOWN, {
+                key: "a",
+                cancelable: true
+              });
+              icon.dispatchEvent(keydown);
+            });
+
+            then("the default action of the key is not prevented", () => {
+              expect(keydown.defaultPrevented).toBeFalse();
+            });
+
+            then("`maximize.status` is `Status.RELEASED`", () => {
+              expect(maximize.status).toEqual(Status.RELEASED);
             });
 
             then("`onmaximize` is not called", () => {
