@@ -1,6 +1,13 @@
 import { Template } from "@scalable.software/component";
 
-import { Maximize, Tag, CSS, Attributes } from "@scalable.software/maximize";
+import {
+  Maximize,
+  Tag,
+  CSS,
+  Attributes,
+  State,
+  Visibility
+} from "@scalable.software/maximize";
 
 // Configuration
 configuration(Configuration.TAG, () => {
@@ -200,6 +207,46 @@ composition(Composition.ELEMENT, () => {
 });
 
 // State
+state(State.VISIBILITY, () => {
+  given("Maximize is defined in custom element registry", () => {
+    beforeEach(() => {
+      define(Maximize.Tag, Maximize);
+    });
+
+    and("a HTML Template is added to DOM", () => {
+      beforeEach(async () => {
+        await Maximize.Template.load("maximize.template.html");
+      });
+      afterEach(() => {
+        remove(Maximize.Tag);
+      });
+
+      and("a new maximize is added to DOM", () => {
+        let maximize: Maximize;
+        beforeEach(() => {
+          maximize = add<Maximize>(Maximize.Tag);
+        });
+        afterEach(() => {
+          maximize.remove();
+        });
+
+        then("`maximize.visibility` getter exists", () => {
+          expect(maximize.visibility).toBeDefined();
+        });
+
+        when("`maximize.visibility` getter exists", () => {
+          then("`maximize.visibility` is `Visibility.VISIBLE`", () => {
+            expect(maximize.visibility).toBe(Visibility.VISIBLE);
+          });
+        });
+
+        then("`visibility` attribute does not exist", () => {
+          expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
+        });
+      });
+    });
+  });
+});
 
 // Operation
 
