@@ -45,7 +45,7 @@ It is a custom element with a Shadow DOM, built on `@scalable.software/component
 
 ## 2. Quick Start Usage Walkthrough
 
-The demo page shows the component in a band across the top, and three groups below it: **Operations**, **States** and **Events**.
+The demo page shows the component in a band across the top, and three groups below it: **States**, **Operations** and **Events**.
 
 1. **Click** the `<maximize-button>`.
    - While the pointer is held down, the button looks pressed and **States** shows `status` as `pressed`.
