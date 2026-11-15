@@ -487,6 +487,16 @@ state(State.STATUS, () => {
           });
         });
 
+        when("invoking `maximize._release`", () => {
+          beforeEach(() => {
+            maximize["_release"]();
+          });
+
+          then("`maximize.status` is `Status.RELEASED`", () => {
+            expect(maximize.status).toBe(Status.RELEASED);
+          });
+        });
+
         when("invoking `maximize._press`", () => {
           beforeEach(() => {
             maximize["_press"]();
