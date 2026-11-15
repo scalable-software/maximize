@@ -243,6 +243,22 @@ state(State.VISIBILITY, () => {
         then("`visibility` attribute does not exist", () => {
           expect(maximize.hasAttribute(Attributes.VISIBILITY)).toBeFalse();
         });
+
+        then("`maximize.visibility` setter exists", () => {
+          expect(hasSetter(maximize, "visibility")).toBeTrue();
+        });
+
+        and("`maximize.visibility` setter exists", () => {
+          when("`maximize.visibility` is set to `Visibility.HIDDEN`", () => {
+            beforeEach(() => {
+              maximize.visibility = Visibility.HIDDEN;
+            });
+
+            then("`maximize.visibility` is `Visibility.HIDDEN`", () => {
+              expect(maximize.visibility).toBe(Visibility.HIDDEN);
+            });
+          });
+        });
       });
     });
   });
