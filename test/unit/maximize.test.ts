@@ -550,6 +550,22 @@ state(State.APPEARANCE, () => {
         then("`appearance` attribute does not exist", () => {
           expect(maximize.hasAttribute(Attributes.APPEARANCE)).toBeFalse();
         });
+
+        then("`maximize.appearance` setter exists", () => {
+          expect(hasSetter(maximize, "appearance")).toBeTrue();
+        });
+
+        and("`maximize.appearance` setter exists", () => {
+          when("`maximize.appearance` is set to `Appearance.FLAT`", () => {
+            beforeEach(() => {
+              maximize.appearance = Appearance.FLAT;
+            });
+
+            then("`maximize.appearance` is `Appearance.FLAT`", () => {
+              expect(maximize.appearance).toBe(Appearance.FLAT);
+            });
+          });
+        });
       });
     });
   });
