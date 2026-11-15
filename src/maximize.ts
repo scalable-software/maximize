@@ -11,6 +11,9 @@ import { Tag, CSS, Attributes, Visibility } from "./maximize.meta.js";
 
 import { type Meta } from "./maximize.meta.js";
 
+// Validation
+import { Validate } from "./maximize.validation.js";
+
 /**
  * Optional Configuration: required for maximize buttons with custom layout and style
  * @category Configuration
@@ -81,6 +84,9 @@ export class Maximize extends Component implements Meta {
     return this._visibility;
   }
   public set visibility(visibility: Visibility) {
+    // Validate
+    visibility = Validate.visibility(visibility);
+
     // Mutate
     this._visibility = visibility;
   }
