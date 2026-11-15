@@ -1205,6 +1205,13 @@ events(Event.ON_MAXIMIZE, () => {
               then("`maximize.onmaximize` is called", () => {
                 expect(onmaximize).toHaveBeenCalled();
               });
+
+              then("`maximize.onmaximize` is called with no detail", () => {
+                const message = { detail: null };
+                expect(onmaximize).toHaveBeenCalledWith(
+                  jasmine.objectContaining(message)
+                );
+              });
             });
           });
         });
