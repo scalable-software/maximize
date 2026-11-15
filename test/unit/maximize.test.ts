@@ -850,6 +850,31 @@ operation(Operation.MAXIMIZE, () => {
         then("`maximize.maximize` method exists", () => {
           expect(maximize.maximize).toBeDefined();
         });
+
+        and("`maximize.maximize` method exists", () => {
+          and("`maximize.onmaximize` is set to a listener", () => {
+            let onmaximize: jasmine.Spy;
+            beforeEach(() => {
+              onmaximize = jasmine.createSpy("onmaximize");
+              maximize.onmaximize = onmaximize;
+            });
+
+            when("invoking `maximize.maximize`", () => {
+              let result: unknown;
+              beforeEach(() => {
+                result = maximize.maximize();
+              });
+
+              then("`maximize.onmaximize` is called", () => {
+                expect(onmaximize).toHaveBeenCalled();
+              });
+
+              then("`maximize.maximize` returns nothing", () => {
+                expect(result).toBeUndefined();
+              });
+            });
+          });
+        });
       });
     });
   });
@@ -1139,6 +1164,26 @@ events(Event.ON_MAXIMIZE, () => {
 
         then("`maximize.onmaximize` setter exists", () => {
           expect(hasSetter(maximize, Event.ON_MAXIMIZE)).toBeTrue();
+        });
+
+        and("`maximize.onmaximize` setter exists", () => {
+          and("`maximize.onmaximize` is set to a listener", () => {
+            let onmaximize: jasmine.Spy;
+            beforeEach(() => {
+              onmaximize = jasmine.createSpy("onmaximize");
+              maximize.onmaximize = onmaximize;
+            });
+
+            when("`maximize.maximize` is invoked", () => {
+              beforeEach(() => {
+                maximize.maximize();
+              });
+
+              then("`maximize.onmaximize` is called", () => {
+                expect(onmaximize).toHaveBeenCalled();
+              });
+            });
+          });
         });
       });
     });
