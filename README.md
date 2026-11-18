@@ -86,8 +86,8 @@ maximize.status; // "released"
 
 ### 3.1 Composition
 
-- **Template** (`maximize.template.html`): a `.icon` container, focusable and announced as the button "Maximize", holding the SVG icon of a single square.
-- **Style** (`maximize.style.css`): the look of the button, its pressed, hover and flat variants, and the light and dark themes.
+- **Template** (`maximize.template.html`): a `.icon` container, focusable and announced as the button "Maximize", holding the SVG icon of a single square. Its one style rule, `:host { display: none; }`, keeps the maximize hidden until its stylesheet applies, so the maximize is never seen unstyled.
+- **Style** (`maximize.style.css`): the look of the button, its pressed, hover and flat variants, and the light and dark themes. Its rule `:host(:defined) { display: inline-block; }` reveals the maximize; a stylesheet that replaces this one must carry that rule, or the maximize stays hidden.
 - **Class** (`maximize.ts`): extends the base component; holds the states, the operations, the event subscriptions and the gesture handlers.
 - **Metadata** (`maximize.meta.ts`): the names and the values of everything the component has.
 - **Validation** (`maximize.validation.ts`): the checks on values that come from outside.
