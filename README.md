@@ -233,6 +233,12 @@ The component is an ES module, imported by its package name. An import map tells
 <maximize-button></maximize-button>
 ```
 
+The metadata (the tag, the attributes, the states, the events and the other names) is also importable on its own, as `@scalable.software/maximize/meta`. It loads without the element, so a consumer outside the browser, such as Node, can `import` or `require()` it without a DOM:
+
+```js
+import { Tag, Attributes } from "@scalable.software/maximize/meta";
+```
+
 ---
 
 ## License
