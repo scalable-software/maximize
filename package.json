@@ -13,6 +13,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./meta": {
+      "types": "./dist/maximize.meta.d.ts",
+      "default": "./dist/maximize.meta.js"
     }
   },
   "types": "dist/index.d.ts",
